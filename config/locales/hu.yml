@@ -1,0 +1,8 @@
+"hu":
+  label_cma_dates: "Dátumok"
+  label_cma_menu_position: "Hely a helyi menüben"
+  label_cma_mixed_values: "(eltérő értékek)"
+  label_cma_position_bottom: "Alul"
+  label_cma_position_top: "Felül"
+  text_cma_request_unknown: "A kérés nem fejeződött be, egyes módosítások már menthettek. Az újraküldés biztonságos: semmi sem kerül kétszer alkalmazásra."
+  text_cma_todo_lists_dates_conflict: "Az Issue To-do Lists %{version} is hozzáadja a Dátumok menüpontot a helyi menühöz, így az kétszer jelenne meg. Kapcsolja ki annak a bővítménynek a beállításaiban, vagy frissítse %{fixed} vagy újabb verzióra."

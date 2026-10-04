@@ -1,0 +1,8 @@
+"de":
+  label_cma_dates: "Termine"
+  label_cma_menu_position: "Position im Kontextmenü"
+  label_cma_mixed_values: "(unterschiedliche Werte)"
+  label_cma_position_bottom: "Unten"
+  label_cma_position_top: "Oben"
+  text_cma_request_unknown: "Die Anfrage wurde nicht abgeschlossen, einige Änderungen sind möglicherweise schon gespeichert. Erneutes Absenden ist sicher: nichts wird doppelt übernommen."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} fügt dem Kontextmenü ebenfalls Termine hinzu, der Eintrag erscheint dann zweimal. Schalten Sie ihn in den Einstellungen jenes Plugins aus oder aktualisieren Sie es auf %{fixed} oder neuer."

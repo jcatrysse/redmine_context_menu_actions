@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# Runs the plugin's specs inside the Redmine checkout prepared by test_setup.sh.
+# Any extra arguments are passed to rspec, so a single file or example works:
+#
+#   ./.codex/test_plugin.sh
+#   ./.codex/test_plugin.sh spec/notes_endpoint_spec.rb -e "private"
+#   ./.codex/test_plugin.sh --seed 1234
+#
+# Environment:
+#   REDMINE_DIR   checkout to run in (default: redmine)
+#   CMA_JUNIT     1 to also write JUnit xml to tmp/test-results (default: 1 in CI)
+#   CMA_RUBY      pin the Ruby version instead of deriving it
+#   MISE_BIN      mise executable, used only when it is present
+set -euo pipefail
+
+# shellcheck source-path=SCRIPTDIR
+# shellcheck source=common.sh
+. "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+
+SPEC_ROOT="plugins/$PLUGIN_NAME/spec"
+
+[ -d "$REDMINE_DIR/$SPEC_ROOT" ] || {
+  echo "ERROR: '$REDMINE_DIR/$SPEC_ROOT' not found. Run ./.codex/redmine_clone.sh first." >&2
+  exit 1
+}
+
+cma_select_ruby quiet
+
+export RAILS_ENV=test
+
+# Arguments are relative to the plugin, so ./.codex/test_plugin.sh spec/foo_spec.rb
+# works the same way it would from the plugin directory.
+cma_rspec_targets "$@"
+
+CMA_JUNIT="${CMA_JUNIT:-$([ "${CI:-}" = "true" ] && echo 1 || echo 0)}"
+formatters=(--format progress)
+if [ "$CMA_JUNIT" = 1 ]; then
+  mkdir -p "$REDMINE_DIR/tmp/test-results"
+  formatters+=(--format RspecJunitFormatter --out "tmp/test-results/rspec-$PLUGIN_NAME.xml")
+fi
+
+run bundle exec rspec "${CMA_RSPEC_TARGETS[@]}" "${formatters[@]}"

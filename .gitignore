@@ -1,0 +1,9 @@
+# ./.codex/redmine_clone.sh puts a Redmine checkout here by default.
+/redmine/
+/tmp/
+/vendor/bundle/
+.bundle/
+Gemfile.lock
+# Playwright output of spec/browser.
+/spec/browser/node_modules/
+/spec/browser/test-results/

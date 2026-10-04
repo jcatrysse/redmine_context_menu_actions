@@ -1,0 +1,8 @@
+"fr":
+  label_cma_dates: "Dates"
+  label_cma_menu_position: "Position dans le menu contextuel"
+  label_cma_mixed_values: "(valeurs différentes)"
+  label_cma_position_bottom: "En bas"
+  label_cma_position_top: "En haut"
+  text_cma_request_unknown: "La requête n'a pas abouti, certaines modifications sont peut-être déjà enregistrées. Vous pouvez soumettre à nouveau : rien n'est appliqué deux fois."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} ajoute aussi Dates au menu contextuel, qui apparaîtrait alors deux fois. Désactivez-le dans les paramètres de ce plugin, ou mettez-le à jour vers %{fixed} ou plus récent."

@@ -1,0 +1,8 @@
+"no":
+  label_cma_dates: "Datoer"
+  label_cma_menu_position: "Plassering i hurtigmenyen"
+  label_cma_mixed_values: "(ulike verdier)"
+  label_cma_position_bottom: "Nederst"
+  label_cma_position_top: "Øverst"
+  text_cma_request_unknown: "Forespørselen ble ikke fullført, noen endringer kan allerede være lagret. Det er trygt å sende på nytt: ingenting brukes to ganger."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} legger også til Datoer i hurtigmenyen, som da vises to ganger. Slå det av i innstillingene for det tillegget, eller oppgrader det til %{fixed} eller nyere."

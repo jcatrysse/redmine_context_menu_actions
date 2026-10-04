@@ -1,0 +1,8 @@
+"sv":
+  label_cma_dates: "Datum"
+  label_cma_menu_position: "Placering i snabbmenyn"
+  label_cma_mixed_values: "(olika värden)"
+  label_cma_position_bottom: "Nederst"
+  label_cma_position_top: "Överst"
+  text_cma_request_unknown: "Begäran slutfördes inte, vissa ändringar kan redan vara sparade. Det är säkert att skicka igen: inget tillämpas två gånger."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} lägger också till Datum i snabbmenyn, som då visas två gånger. Stäng av det i det tilläggets inställningar eller uppgradera det till %{fixed} eller senare."

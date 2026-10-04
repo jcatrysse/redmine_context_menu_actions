@@ -1,0 +1,9 @@
+<% if lines.any? %>
+<div id="errorExplanation">
+  <ul>
+  <% lines.each do |line| %>
+    <li><%= line %></li>
+  <% end %>
+  </ul>
+</div>
+<% end %>

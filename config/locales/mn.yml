@@ -1,0 +1,8 @@
+"mn":
+  label_cma_dates: "Огноонууд"
+  label_cma_menu_position: "Контекст цэс дэх байрлал"
+  label_cma_mixed_values: "(өөр өөр утгууд)"
+  label_cma_position_bottom: "Доод хэсэгт"
+  label_cma_position_top: "Дээд хэсэгт"
+  text_cma_request_unknown: "Хүсэлт дуусаагүй, зарим өөрчлөлт аль хэдийн хадгалагдсан байж магадгүй. Дахин илгээх нь аюулгүй: юу ч хоёр удаа хэрэгжихгүй."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} мөн контекст цэсэнд Огноонууд нэмдэг тул хоёр удаа харагдана. Тэр нэмэлтийн тохиргооноос унтраах эсвэл %{fixed} буюу түүнээс шинэ хувилбар руу шинэчилнэ үү."

@@ -1,0 +1,14 @@
+<%# Add a note, then Dates: together, at the top of the menu (above Edit) or at its end, as the settings say. %>
+<% if RedmineContextMenuActions.notes_enabled? && RedmineContextMenuActions::Predicates.notes_addable?(issues) %>
+  <%= render :partial => 'context_menu_actions/notes_menu_item', :locals => {:issues => issues} %>
+<% end %>
+<% if RedmineContextMenuActions.dates_enabled? %>
+  <%
+    # The context menu already computed the safe attributes all selected issues
+    # share; another caller of the hook may not have.
+    safe_attributes = @safe_attributes || RedmineContextMenuActions::Predicates.common_safe_attribute_names(issues)
+  %>
+  <% if RedmineContextMenuActions::Predicates.date_fields(safe_attributes).any? %>
+    <%= render :partial => 'context_menu_actions/dates_menu_item', :locals => {:issues => issues} %>
+  <% end %>
+<% end %>

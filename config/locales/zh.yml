@@ -1,0 +1,8 @@
+"zh":
+  label_cma_dates: "日期"
+  label_cma_menu_position: "在右键菜单中的位置"
+  label_cma_mixed_values: "(值不同)"
+  label_cma_position_bottom: "底部"
+  label_cma_position_top: "顶部"
+  text_cma_request_unknown: "请求未完成，部分更改可能已经保存。可以放心再次提交：不会重复应用任何更改。"
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} 也会在右键菜单中添加日期，因此会出现两次。请在该插件的设置中关闭它，或将其升级到 %{fixed} 或更高版本。"

@@ -1,0 +1,8 @@
+"ru":
+  label_cma_dates: "Даты"
+  label_cma_menu_position: "Положение в контекстном меню"
+  label_cma_mixed_values: "(разные значения)"
+  label_cma_position_bottom: "Внизу"
+  label_cma_position_top: "Вверху"
+  text_cma_request_unknown: "Запрос не завершился, часть изменений может быть уже сохранена. Отправить ещё раз безопасно: ничего не применяется дважды."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} тоже добавляет Даты в контекстное меню, и пункт появится дважды. Отключите его в настройках того плагина или обновите плагин до %{fixed} или новее."

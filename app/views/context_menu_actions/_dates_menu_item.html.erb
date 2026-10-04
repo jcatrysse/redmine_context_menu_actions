@@ -1,0 +1,8 @@
+<%
+  label = RedmineContextMenuActions::Icons.label(self, 'calendar', l(:label_cma_dates))
+  # 5.1 has no calendar icon class; its core image is set on the link itself.
+  style = RedmineContextMenuActions::Icons.sprites? ? nil : "background-image: url(#{image_path('calendar.png')});"
+%>
+<li><%= context_menu_link label,
+                          context_menu_actions_edit_dates_path(:ids => issues.map(&:id), :c => RedmineContextMenuActions.column_names(params[:c])),
+                          :remote => true, :class => 'icon icon-calendar cma-menu-link cma-open', :style => style %></li>

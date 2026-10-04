@@ -1,0 +1,8 @@
+"et":
+  label_cma_dates: "Kuupäevad"
+  label_cma_menu_position: "Asukoht kontekstimenüüs"
+  label_cma_mixed_values: "(erinevad väärtused)"
+  label_cma_position_bottom: "All"
+  label_cma_position_top: "Üleval"
+  text_cma_request_unknown: "Päring ei lõppenud, mõned muudatused võivad juba salvestatud olla. Uuesti saatmine on ohutu: midagi ei rakendata kaks korda."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} lisab kontekstimenüüsse samuti Kuupäevad, mis kuvataks siis kaks korda. Lülitage see selle plugina seadetes välja või uuendage see versioonile %{fixed} või uuemale."

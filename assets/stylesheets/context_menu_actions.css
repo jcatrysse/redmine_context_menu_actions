@@ -1,0 +1,59 @@
+/* Redmine Context Menu Actions plugin. Core classes do the styling; this only
+   positions what core has no class for. */
+
+/* A click on the icon or label of a menu item lands on the link itself, so core's
+   context menu treats it as a link click and keeps the selected rows selected. */
+#context-menu a.cma-menu-link > * { pointer-events: none; }
+
+/* The link in a Last notes cell: small, to the right, out of the way of the
+   note itself. */
+td.last_notes a.cma-last-notes-link { float: right; margin-left: 1em; font-size: 0.9em; }
+td.last_notes a.cma-last-notes-link > * { pointer-events: none; }
+
+/* The table and code language pickers of the wiki toolbar are appended to
+   <body>, without a stacking order of their own: above a modal overlay they
+   need one. Only while a plugin dialog is open. */
+body.cma-dialog-open > .table-generator,
+body.cma-dialog-open > .ui-menu { z-index: 1050; }
+
+#ajax-modal.cma-modal textarea.wiki-edit { width: 100%; box-sizing: border-box; }
+/* Core lays the toolbar out on one line, in a tab list positioned at the
+   bottom of a fixed height bar, and clips what does not fit. A dialog is
+   narrower than the issue page, and the tab labels are longer in some
+   languages: in the plugin's dialogs the list is in the flow and the buttons
+   wrap next to the tabs. Physical and logical properties, for 5.1 to 7.0. */
+#ajax-modal.cma-modal .jstTabs.tabs { overflow: visible; height: auto; block-size: auto; }
+#ajax-modal.cma-modal .jstTabs.tabs ul {
+  position: static; display: flex; align-items: flex-end;
+  width: auto; min-width: 0; inline-size: auto; min-inline-size: 0;
+}
+#ajax-modal.cma-modal .jstTabs.tabs li { flex: none; }
+#ajax-modal.cma-modal .jstTabs.tabs li.tab-elements { flex: 1 1 0; min-width: 0; min-inline-size: 0; height: auto; block-size: auto; }
+#ajax-modal.cma-modal .jstElements { display: flex; flex-wrap: wrap; align-items: center; height: auto; block-size: auto; }
+#ajax-modal.cma-modal .cma-issues ul { max-height: 10em; overflow-y: auto; margin: 0.4em 0; padding-left: 1.5em; }
+#ajax-modal.cma-modal .cma-issues summary { cursor: pointer; font-weight: bold; }
+#ajax-modal.cma-modal #errorExplanation { margin: 0.5em 0; }
+
+/* The rows a save just changed, for two seconds. Semi transparent, so it reads on
+   light and dark themes alike. */
+tr.cma-updated > td { animation: cma-updated 2s ease-out; }
+@keyframes cma-updated {
+  from { background-color: rgba(255, 214, 0, 0.45); }
+  to { background-color: transparent; }
+}
+
+/* The confirmation stays in view wherever the list is scrolled to. */
+#cma-notice {
+  position: fixed;
+  top: 1em;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  margin: 0;
+  max-width: 90%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  tr.cma-updated > td { animation: none; }
+}

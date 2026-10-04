@@ -1,0 +1,8 @@
+"gl":
+  label_cma_dates: "Datas"
+  label_cma_menu_position: "Posición no menú contextual"
+  label_cma_mixed_values: "(valores distintos)"
+  label_cma_position_bottom: "Abaixo"
+  label_cma_position_top: "Arriba"
+  text_cma_request_unknown: "A solicitude non se completou, algúns cambios poden estar xa gardados. Pode enviar de novo sen risco: nada se aplica dúas veces."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} tamén engade Datas ao menú contextual, que aparecería dúas veces. Desactívao na configuración dese complemento ou actualízao á %{fixed} ou posterior."

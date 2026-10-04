@@ -1,0 +1,77 @@
+name: Bug report
+description: A context menu action does something unexpected, or something breaks
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The actions run inside Redmine's own context menu and dialogs, and those differ
+        per Redmine version. The version details below are what makes a report
+        reproducible.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Which action (Add a note, Dates, the link in Last notes), on how many issues, and what you saw instead of what you expected.
+      placeholder: |
+        Selected 3 issues on the issue list, Add a note, typed a note and pressed
+        Ctrl+Enter. The dialog closed but the Last notes row of #12 did not change.
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Redmine, Rails, Ruby and plugin version
+      description: The lines at the top of Administration > Information, plus the plugin version from Administration > Plugins.
+      placeholder: Redmine 6.1.2, Rails 7.2.3, Ruby 3.3.6, plugin 1.0.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: database
+    attributes:
+      label: Database
+      options:
+        - PostgreSQL
+        - MySQL
+        - MariaDB
+        - other (say which below)
+    validations:
+      required: true
+
+  - type: input
+    id: where
+    attributes:
+      label: Page and browser
+      description: Where the context menu was opened (issue list, My page, Gantt, a plugin page) and the browser.
+      placeholder: Issue list of project "Ops", Firefox 140
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console and Redmine log (optional)
+      description: |
+        Errors from the browser's developer console, and the lines of log/production.log
+        for the request. Remove anything confidential, the shape of the error is what
+        matters.
+      render: text
+
+  - type: textarea
+    id: permissions
+    attributes:
+      label: Permissions, if an action is missing or refused
+      description: |
+        Whether the user is an administrator, which roles they have in the projects of
+        the selected issues, and whether the projects are closed. The actions use
+        Redmine's own permissions (Add notes, Edit issues, Set notes as private,
+        workflow read-only fields), so a missing action is sometimes the correct answer.
+
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: Before reporting
+      options:
+        - label: I checked whether the same change works on the issue page itself, for the same user
+        - label: I checked the plugin settings in Administration > Plugins

@@ -1,0 +1,8 @@
+"ar":
+  label_cma_dates: "التواريخ"
+  label_cma_menu_position: "الموضع في قائمة السياق"
+  label_cma_mixed_values: "(قيم مختلفة)"
+  label_cma_position_bottom: "في الأسفل"
+  label_cma_position_top: "في الأعلى"
+  text_cma_request_unknown: "لم يكتمل الطلب، وقد تكون بعض التغييرات محفوظة بالفعل. الإرسال مرة أخرى آمن: لا يُطبَّق أي شيء مرتين."
+  text_cma_todo_lists_dates_conflict: "يضيف Issue To-do Lists %{version} أيضًا التواريخ إلى قائمة السياق، فتظهر مرتين. أوقفها في إعدادات تلك الإضافة أو حدّثها إلى %{fixed} أو أحدث."

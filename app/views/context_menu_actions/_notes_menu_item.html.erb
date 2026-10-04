@@ -1,0 +1,3 @@
+<li><%= context_menu_link RedmineContextMenuActions::Icons.label(self, 'comment', l(:label_add_note)),
+                          context_menu_actions_new_note_path(:ids => issues.map(&:id), :c => RedmineContextMenuActions.column_names(params[:c])),
+                          :remote => true, :class => 'icon icon-comment cma-menu-link cma-open' %></li>

@@ -1,0 +1,3 @@
+<% if RedmineContextMenuActions.menu_position == 'bottom' %>
+  <%= render :partial => 'context_menu_actions/hooks/menu_items', :locals => {:issues => issues} %>
+<% end %>

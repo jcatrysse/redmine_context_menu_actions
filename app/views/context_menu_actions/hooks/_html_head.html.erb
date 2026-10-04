@@ -1,0 +1,14 @@
+<% if RedmineContextMenuActions.any_enabled? %>
+  <%= stylesheet_link_tag 'context_menu_actions', :plugin => 'redmine_context_menu_actions' %>
+  <%= javascript_include_tag 'context_menu_actions', :plugin => 'redmine_context_menu_actions' %>
+  <%
+    # A page with a context menu may open a dialog with a notes field. The wiki
+    # toolbar and the date picker of core are loaded in the head of a full page
+    # only, so they are added here; both helpers do nothing when the page already
+    # has them.
+    if @context_menu_included
+      heads_for_wiki_formatter
+      include_calendar_headers_tags if RedmineContextMenuActions.dates_enabled?
+    end
+  %>
+<% end %>

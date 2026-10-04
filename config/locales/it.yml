@@ -1,0 +1,8 @@
+"it":
+  label_cma_dates: "Date"
+  label_cma_menu_position: "Posizione nel menu contestuale"
+  label_cma_mixed_values: "(valori diversi)"
+  label_cma_position_bottom: "In basso"
+  label_cma_position_top: "In alto"
+  text_cma_request_unknown: "La richiesta non è stata completata, alcune modifiche potrebbero essere già salvate. Puoi inviare di nuovo senza rischi: nulla viene applicato due volte."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} aggiunge anch'esso Date al menu contestuale, che comparirebbe due volte. Disattivalo nelle impostazioni di quel plugin o aggiornalo alla %{fixed} o successiva."

@@ -1,0 +1,7 @@
+RedmineContextMenuActions.openDialog({
+  html: '<%= j render(:partial => 'context_menu_actions/note_form') %>',
+  width: '720px',
+  focus: '#cma_notes',
+  toolbar: '<%= j wikitoolbar_for('cma_notes', cma_preview_url(@issues)) %>',
+  mentions: <%= raw_json cma_mentions_url(@issues, @projects) %>
+});

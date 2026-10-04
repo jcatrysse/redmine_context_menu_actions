@@ -1,0 +1,8 @@
+"sq":
+  label_cma_dates: "Datat"
+  label_cma_menu_position: "Pozicioni në menynë e kontekstit"
+  label_cma_mixed_values: "(vlera të ndryshme)"
+  label_cma_position_bottom: "Poshtë"
+  label_cma_position_top: "Lart"
+  text_cma_request_unknown: "Kërkesa nuk përfundoi, disa ndryshime mund të jenë ruajtur tashmë. Ridërgimi është i sigurt: asgjë nuk zbatohet dy herë."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} shton gjithashtu Datat në menynë e kontekstit, që do të shfaqeshin dy herë. Çaktivizojeni te cilësimet e asaj shtojce ose përditësojeni në %{fixed} ose më të re."

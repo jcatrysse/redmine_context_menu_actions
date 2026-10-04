@@ -1,0 +1,8 @@
+"da":
+  label_cma_dates: "Datoer"
+  label_cma_menu_position: "Placering i genvejsmenuen"
+  label_cma_mixed_values: "(forskellige værdier)"
+  label_cma_position_bottom: "Nederst"
+  label_cma_position_top: "Øverst"
+  text_cma_request_unknown: "Anmodningen blev ikke fuldført, nogle ændringer er måske allerede gemt. Det er sikkert at sende igen: intet anvendes to gange."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} tilføjer også Datoer til genvejsmenuen, som så vises to gange. Slå det fra i indstillingerne for det plugin, eller opgrader det til %{fixed} eller nyere."

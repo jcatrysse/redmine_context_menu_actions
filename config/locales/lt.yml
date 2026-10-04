@@ -1,0 +1,8 @@
+"lt":
+  label_cma_dates: "Datos"
+  label_cma_menu_position: "Vieta kontekstiniame meniu"
+  label_cma_mixed_values: "(skirtingos reikšmės)"
+  label_cma_position_bottom: "Apačioje"
+  label_cma_position_top: "Viršuje"
+  text_cma_request_unknown: "Užklausa nebaigta, kai kurie pakeitimai jau gali būti išsaugoti. Pateikti dar kartą saugu: niekas netaikoma du kartus."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} taip pat prideda Datos į kontekstinį meniu, todėl jos būtų rodomos du kartus. Išjunkite tai to įskiepio nustatymuose arba atnaujinkite jį iki %{fixed} ar naujesnės."

@@ -1,0 +1,8 @@
+"eu":
+  label_cma_dates: "Datak"
+  label_cma_menu_position: "Kokapena laster-menuan"
+  label_cma_mixed_values: "(balio desberdinak)"
+  label_cma_position_bottom: "Behean"
+  label_cma_position_top: "Goian"
+  text_cma_request_unknown: "Eskaera ez da osatu, aldaketa batzuk gordeta egon daitezke jada. Berriro bidal dezakezu arriskurik gabe: ezer ez da bi aldiz aplikatzen."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} pluginak ere Datak gehitzen dizkio laster-menuari, eta bi aldiz agertuko litzateke. Desaktibatu plugin horren ezarpenetan, edo eguneratu %{fixed} bertsiora edo berriagora."

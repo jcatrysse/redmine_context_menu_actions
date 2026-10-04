@@ -1,0 +1,8 @@
+"cs":
+  label_cma_dates: "Termíny"
+  label_cma_menu_position: "Umístění v kontextové nabídce"
+  label_cma_mixed_values: "(různé hodnoty)"
+  label_cma_position_bottom: "Dole"
+  label_cma_position_top: "Nahoře"
+  text_cma_request_unknown: "Požadavek nebyl dokončen, některé změny už mohou být uloženy. Odeslat znovu je bezpečné: nic se nepoužije dvakrát."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} také přidává Termíny do kontextové nabídky, která by se pak zobrazila dvakrát. Vypněte je v nastavení tohoto pluginu, nebo jej aktualizujte na %{fixed} či novější."

@@ -1,0 +1,103 @@
+name: Browser
+
+# The dialogs are JavaScript against core's own modal, toolbar and context menu
+# code, which changes between Redmine versions (7.0 also changed the layout the
+# dialog sits in). The rspec suite cannot see any of it, so this drives a real
+# Chromium through the meeting flow on every supported version, and once on
+# MySQL, whose datetimes have whole seconds.
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    name: ${{ matrix.redmine }} / ${{ matrix.db }}
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - redmine: 5.1-stable
+            ruby: '3.2'
+            db: postgresql
+          - redmine: 6.0-stable
+            ruby: '3.3'
+            db: postgresql
+          - redmine: 6.1-stable
+            ruby: '3.4'
+            db: postgresql
+          - redmine: 6.1-stable
+            ruby: '3.4'
+            db: mysql
+          - redmine: 7.0-stable
+            ruby: '3.4'
+            db: postgresql
+
+    env:
+      CMA_DB: ${{ matrix.db }}
+      CMA_PROVISION_DB: '0'
+      CMA_DB_HOST: 127.0.0.1
+      CMA_DB_NAME: redmine_test
+      # Throwaway credentials for a throwaway container. Not secrets.
+      CMA_DB_USER: redmine
+      CMA_DB_PASSWORD: redmine
+      CMA_RUBY: ${{ matrix.ruby }}
+
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Start ${{ matrix.db }}
+        run: ./.codex/start_database.sh ${{ matrix.db }}
+
+      - name: Install client libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libpq-dev default-libmysqlclient-dev rsync
+
+      - name: Check out Redmine ${{ matrix.redmine }} and install the plugin
+        run: ./.codex/redmine_clone.sh ${{ matrix.redmine }}
+
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: false
+
+      - name: Cache gems
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: redmine/vendor/bundle
+          key: >-
+            gems-${{ runner.os }}-${{ matrix.redmine }}-${{ matrix.ruby }}-${{ matrix.db }}-${{
+              hashFiles('redmine/Gemfile', 'Gemfile') }}
+          restore-keys: |
+            gems-${{ runner.os }}-${{ matrix.redmine }}-${{ matrix.ruby }}-${{ matrix.db }}-
+
+      - name: Install gems and migrate
+        run: ./.codex/test_setup.sh
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: '22'
+
+      - name: Install Playwright and Chromium
+        # Pinned like RuboCop: a new Playwright brings a new Chromium.
+        run: |
+          npm install --no-save --prefix spec/browser playwright@1.56.1
+          npx --prefix spec/browser playwright install --with-deps chromium
+
+      - name: Run the browser specs
+        run: ./.codex/browser_test.sh
