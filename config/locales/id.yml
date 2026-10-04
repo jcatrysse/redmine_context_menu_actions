@@ -1,0 +1,8 @@
+"id":
+  label_cma_dates: "Tanggal"
+  label_cma_menu_position: "Posisi di menu konteks"
+  label_cma_mixed_values: "(nilai berbeda)"
+  label_cma_position_bottom: "Bawah"
+  label_cma_position_top: "Atas"
+  text_cma_request_unknown: "Permintaan tidak selesai, beberapa perubahan mungkin sudah tersimpan. Mengirim ulang aman: tidak ada yang diterapkan dua kali."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} juga menambahkan Tanggal ke menu konteks, sehingga muncul dua kali. Matikan di pengaturan plugin tersebut, atau perbarui ke %{fixed} atau yang lebih baru."

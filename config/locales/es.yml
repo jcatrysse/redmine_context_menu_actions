@@ -1,0 +1,8 @@
+"es":
+  label_cma_dates: "Fechas"
+  label_cma_menu_position: "Posición en el menú contextual"
+  label_cma_mixed_values: "(valores distintos)"
+  label_cma_position_bottom: "Abajo"
+  label_cma_position_top: "Arriba"
+  text_cma_request_unknown: "La solicitud no se completó, algunos cambios pueden estar ya guardados. Puede enviar de nuevo sin riesgo: nada se aplica dos veces."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} también añade Fechas al menú contextual, que aparecería dos veces. Desactívelo en la configuración de ese plugin o actualícelo a %{fixed} o posterior."

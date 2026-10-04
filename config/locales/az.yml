@@ -1,0 +1,8 @@
+"az":
+  label_cma_dates: "Tarixlər"
+  label_cma_menu_position: "Kontekst menyusunda yer"
+  label_cma_mixed_values: "(müxtəlif dəyərlər)"
+  label_cma_position_bottom: "Aşağıda"
+  label_cma_position_top: "Yuxarıda"
+  text_cma_request_unknown: "Sorğu tamamlanmadı, bəzi dəyişikliklər artıq yadda saxlanmış ola bilər. Yenidən göndərmək təhlükəsizdir: heç nə iki dəfə tətbiq olunmur."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} də kontekst menyusuna Tarixlər əlavə edir, buna görə iki dəfə görünəcək. Onu həmin plaginin ayarlarında söndürün və ya plagini %{fixed} və ya daha yeni versiyaya yeniləyin."

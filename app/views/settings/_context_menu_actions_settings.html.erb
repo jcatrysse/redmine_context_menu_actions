@@ -1,0 +1,35 @@
+<% if (todo_lists_version = RedmineContextMenuActions::Coexistence.todo_lists_dates_conflict) %>
+  <div class="flash warning cma-coexistence">
+    <%= l(:text_cma_todo_lists_dates_conflict, :version => todo_lists_version,
+                                               :fixed => RedmineContextMenuActions::Coexistence::TODO_LISTS_FIXED_IN) %>
+  </div>
+<% end %>
+
+<%# The hidden 0 stores an unticked box as "off" rather than as nothing, as core's own setting_check_box does. %>
+<p>
+  <label for="settings_enable_notes"><%= l(:label_add_note) %></label>
+  <%= hidden_field_tag 'settings[enable_notes]', '0', :id => nil %>
+  <%= check_box_tag 'settings[enable_notes]', '1', RedmineContextMenuActions.enabled?('enable_notes'), :id => 'settings_enable_notes' %>
+</p>
+
+<p>
+  <label for="settings_enable_last_notes_link"><%= "#{l(:label_last_notes)}: #{l(:label_add_note)}" %></label>
+  <%= hidden_field_tag 'settings[enable_last_notes_link]', '0', :id => nil %>
+  <%= check_box_tag 'settings[enable_last_notes_link]', '1', RedmineContextMenuActions.enabled?('enable_last_notes_link'),
+                    :id => 'settings_enable_last_notes_link' %>
+</p>
+
+<p>
+  <label for="settings_enable_dates"><%= l(:label_cma_dates) %></label>
+  <%= hidden_field_tag 'settings[enable_dates]', '0', :id => nil %>
+  <%= check_box_tag 'settings[enable_dates]', '1', RedmineContextMenuActions.enabled?('enable_dates'), :id => 'settings_enable_dates' %>
+</p>
+
+<%# Where Add a note and Dates sit, together: above Edit, or at the end of the menu. %>
+<p>
+  <label for="settings_menu_position"><%= l(:label_cma_menu_position) %></label>
+  <%= select_tag 'settings[menu_position]',
+                 options_for_select([[l(:label_cma_position_top), 'top'], [l(:label_cma_position_bottom), 'bottom']],
+                                    RedmineContextMenuActions.menu_position),
+                 :id => 'settings_menu_position' %>
+</p>

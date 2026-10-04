@@ -1,0 +1,28 @@
+<h3 class="title"><%= l(:label_add_note) %></h3>
+<%= form_tag(context_menu_actions_notes_path, :remote => true, :id => 'cma-note-form',
+             :class => 'cma-form', :data => cma_form_data(@issues)) do %>
+  <%= render :partial => 'context_menu_actions/issues_summary', :locals => {:issues => @issues} %>
+  <%= render :partial => 'context_menu_actions/ids', :locals => {:issues => @issues} %>
+  <%= hidden_field_tag 'cma_since', Time.now.to_i, :id => nil %>
+  <% @column_names.each do |name| %>
+    <%= hidden_field_tag 'c[]', name, :id => nil %>
+  <% end %>
+  <div class="cma-errors"></div>
+  <p>
+    <label for="cma_notes" class="hidden-for-sighted"><%= l(:field_notes) %></label>
+    <%= text_area_tag 'notes', '', :id => 'cma_notes', :cols => 60, :rows => 8,
+                      :class => 'wiki-edit', :data => cma_textarea_data %>
+  </p>
+  <% if @private_notes_allowed %>
+    <p>
+      <label class="inline">
+        <%= check_box_tag 'issue[private_notes]', '1', false, :id => 'cma_private_notes' %>
+        <%= l(:field_private_notes) %>
+      </label>
+    </p>
+  <% end %>
+  <p class="buttons">
+    <%= submit_tag l(:button_submit), :name => nil, :class => 'cma-submit' %>
+    <%= link_to_function l(:button_cancel), 'hideModal(this);' %>
+  </p>
+<% end %>

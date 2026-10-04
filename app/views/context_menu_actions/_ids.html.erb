@@ -1,0 +1,5 @@
+<span class="cma-ids">
+<% issues.each do |issue| %>
+  <%= hidden_field_tag 'ids[]', issue.id, :id => nil %>
+<% end %>
+</span>

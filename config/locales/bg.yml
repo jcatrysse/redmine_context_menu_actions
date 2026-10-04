@@ -1,0 +1,8 @@
+"bg":
+  label_cma_dates: "Дати"
+  label_cma_menu_position: "Позиция в контекстното меню"
+  label_cma_mixed_values: "(различни стойности)"
+  label_cma_position_bottom: "Долу"
+  label_cma_position_top: "Горе"
+  text_cma_request_unknown: "Заявката не завърши, някои промени може вече да са записани. Повторното изпращане е безопасно: нищо не се прилага два пъти."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} също добавя Дати в контекстното меню, които тогава ще се показват два пъти. Изключете ги в настройките на този плъгин или го обновете до %{fixed} или по-нова."

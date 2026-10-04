@@ -1,0 +1,15 @@
+<div class="cma-issues-summary">
+<% if issues.size == 1 %>
+  <p><strong><%= cma_issue_label(issues.first) %></strong></p>
+<% else %>
+  <details class="cma-issues">
+    <summary><%= l(:label_x_issues, :count => issues.size) %></summary>
+    <ul>
+    <% with_project = issues.map(&:project_id).uniq.size > 1 %>
+    <% issues.each do |issue| %>
+      <li><%= cma_issue_label(issue, :with_project => with_project) %></li>
+    <% end %>
+    </ul>
+  </details>
+<% end %>
+</div>

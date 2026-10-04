@@ -1,0 +1,8 @@
+RedmineContextMenuActions.openDialog({
+  html: '<%= j render(:partial => 'context_menu_actions/dates_form') %>',
+  width: '720px',
+  focus: 'input[type=date]',
+  toolbar: '<%= j(@notes_allowed ? wikitoolbar_for('cma_dates_notes', cma_preview_url(@issues)) : '') %>',
+  mentions: <%= raw_json(@notes_allowed ? cma_mentions_url(@issues, @projects) : nil) %>,
+  dates: true
+});

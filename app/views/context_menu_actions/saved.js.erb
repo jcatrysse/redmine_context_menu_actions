@@ -1,0 +1,16 @@
+<%
+  error_lines = cma_error_lines(@request_errors, @failed_results, @issues.size)
+  payload = {
+    :saved => @saved_issues.map { |issue| {:id => issue.id, :html => column_content(@last_notes_column, issue).to_s} },
+    :failed => @remaining_issues.map(&:id),
+    :lastNotes => @last_notes_layout,
+    :notice => @notice,
+    :reload => !!@reload,
+    :dialog => dialog_token,
+    :errorText => error_lines.first,
+    :errorsHtml => render(:partial => 'context_menu_actions/errors', :formats => [:html], :locals => {:lines => error_lines}),
+    :idsHtml => render(:partial => 'context_menu_actions/ids', :formats => [:html], :locals => {:issues => @remaining_issues}),
+    :summaryHtml => render(:partial => 'context_menu_actions/issues_summary', :formats => [:html], :locals => {:issues => @remaining_issues})
+  }
+%>
+RedmineContextMenuActions.saved(<%= raw_json payload %>);

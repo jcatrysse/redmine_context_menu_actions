@@ -1,0 +1,8 @@
+"sr":
+  label_cma_dates: "Датуми"
+  label_cma_menu_position: "Положај у контекстном менију"
+  label_cma_mixed_values: "(различите вредности)"
+  label_cma_position_bottom: "Доле"
+  label_cma_position_top: "Горе"
+  text_cma_request_unknown: "Захтев није завршен, неке промене су можда већ сачуване. Поновно слање је безбедно: ништа се не примењује двапут."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} такође додаје Датуме у контекстни мени, па би се појавили двапут. Искључите то у подешавањима тог додатка или га надоградите на %{fixed} или новију."

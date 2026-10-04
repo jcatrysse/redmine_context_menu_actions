@@ -1,0 +1,8 @@
+"th":
+  label_cma_dates: "วันที่"
+  label_cma_menu_position: "ตำแหน่งในเมนูบริบท"
+  label_cma_mixed_values: "(ค่าแตกต่างกัน)"
+  label_cma_position_bottom: "ด้านล่าง"
+  label_cma_position_top: "ด้านบน"
+  text_cma_request_unknown: "คำขอไม่เสร็จสมบูรณ์ การเปลี่ยนแปลงบางส่วนอาจถูกบันทึกแล้ว ส่งอีกครั้งได้อย่างปลอดภัย: ไม่มีสิ่งใดถูกนำไปใช้ซ้ำสองครั้ง"
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} เพิ่มรายการวันที่ลงในเมนูบริบทด้วย จึงจะแสดงซ้ำสองครั้ง ปิดรายการนั้นในการตั้งค่าของปลั๊กอินดังกล่าว หรืออัปเกรดเป็น %{fixed} ขึ้นไป"

@@ -1,0 +1,104 @@
+# Mirrors the style decisions in Redmine's own .rubocop.yml (and the cops its
+# .rubocop_todo.yml switches off), so that plugin code reads like the core code
+# it sits next to. Copied from redmine_parent_child_filters. Anything not listed
+# here is RuboCop's default.
+AllCops:
+  # The plugin requires Ruby 3.0 or later (Redmine 5.1 itself still accepts 2.7).
+  TargetRubyVersion: 3.0
+  NewCops: enable
+  # The plugin lints with plain RuboCop; suggesting rubocop-rails on every run only
+  # adds noise to the CI log.
+  SuggestExtensions: false
+  Exclude:
+    - 'redmine/**/*'
+    - 'vendor/**/*'
+    - 'tmp/**/*'
+
+# --- Decisions taken from Redmine core --------------------------------------
+Metrics:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 194
+  AllowedPatterns: ['\A\s*#']
+
+Layout/EmptyLineBetweenDefs:
+  AllowAdjacentOneLineDefs: true
+
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
+Layout/LineContinuationLeadingSpace:
+  Enabled: false
+
+Layout/ExtraSpacing:
+  Enabled: false
+
+# Hook methods take Redmine's `context` argument whether they use it or not.
+# Core switches this cop off for the same reason.
+Lint/UnusedMethodArgument:
+  Enabled: false
+
+Style/Lambda:
+  Enabled: false
+
+Style/StringConcatenation:
+  Enabled: false
+
+Style/OptionalBooleanParameter:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/HashSyntax:
+  EnforcedStyle: no_mixed_keys
+  EnforcedShorthandSyntax: either
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/StringLiteralsInInterpolation:
+  Enabled: false
+
+Style/TernaryParentheses:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/RedundantSelf:
+  Enabled: false
+
+Naming/AccessorMethodName:
+  Enabled: false
+
+Naming/PredicatePrefix:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+  Exclude:
+    - 'Gemfile'
+
+# --- Decisions specific to this plugin --------------------------------------
+# Spec files are one long `describe` block each.
+Metrics/BlockLength:
+  Enabled: false
+
+# RuboCop reads the specs as plain Ruby, without rubocop-rspec. Fixture-style
+# constants inside a `describe` block are idiomatic there, and RSpec's own
+# `subject` is not an accessor.
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - 'spec/**/*'
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*'

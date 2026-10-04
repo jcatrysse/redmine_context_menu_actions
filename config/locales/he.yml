@@ -1,0 +1,8 @@
+"he":
+  label_cma_dates: "תאריכים"
+  label_cma_menu_position: "מיקום בתפריט ההקשר"
+  label_cma_mixed_values: "(ערכים שונים)"
+  label_cma_position_bottom: "למטה"
+  label_cma_position_top: "למעלה"
+  text_cma_request_unknown: "הבקשה לא הושלמה, ייתכן שחלק מהשינויים כבר נשמרו. שליחה חוזרת בטוחה: שום דבר לא מוחל פעמיים."
+  text_cma_todo_lists_dates_conflict: "גם Issue To-do Lists %{version} מוסיף תאריכים לתפריט ההקשר, ולכן הפריט יופיע פעמיים. כבו אותו בהגדרות של התוסף ההוא או שדרגו אותו לגרסה %{fixed} ומעלה."

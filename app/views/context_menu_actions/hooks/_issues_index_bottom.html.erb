@@ -1,0 +1,17 @@
+<%
+  # Decided here, on the server, for the issues of this page: the Last notes
+  # block is shown, the link is switched on, and the user may add a note.
+  # notes_addable? reads roles cached per project, so this adds no query per row.
+  if RedmineContextMenuActions.last_notes_link_enabled? && query && query.has_column?(:last_notes) && issues.present?
+    addable_ids = issues.select { |issue| issue.notes_addable? }.map(&:id)
+  end
+%>
+<% if addable_ids.present? %>
+  <div id="cma-last-notes" hidden
+       data-ids="<%= addable_ids.to_json %>"
+       data-url="<%= context_menu_actions_new_note_path(:c => query.columns.map { |column| column.name.to_s }) %>">
+    <%= link_to RedmineContextMenuActions::Icons.label(self, 'comment', l(:label_add_note)), '#',
+                :remote => true, :class => 'icon icon-comment cma-last-notes-link cma-open',
+                :title => l(:label_add_note) %>
+  </div>
+<% end %>

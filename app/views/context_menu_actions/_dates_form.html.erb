@@ -1,0 +1,47 @@
+<h3 class="title"><%= l(:label_cma_dates) %></h3>
+<%= form_tag(context_menu_actions_dates_path, :method => :patch, :remote => true, :id => 'cma-dates-form',
+             :class => 'cma-form cma-dates-form', :data => cma_form_data(@issues).merge(cma_dates_data)) do %>
+  <%= render :partial => 'context_menu_actions/issues_summary', :locals => {:issues => @issues} %>
+  <%= render :partial => 'context_menu_actions/ids', :locals => {:issues => @issues} %>
+  <%= hidden_field_tag 'cma_since', Time.now.to_i, :id => nil %>
+  <% @column_names.each do |name| %>
+    <%= hidden_field_tag 'c[]', name, :id => nil %>
+  <% end %>
+  <div class="cma-errors"></div>
+  <div class="tabular">
+  <% @date_fields.each do |field| %>
+    <% value = @date_values[field][:value] %>
+    <p>
+      <label for="cma_<%= field %>"><%= l(:"field_#{field}") %></label>
+      <%= date_field_tag "issue[#{field}]", value, :id => "cma_#{field}", :size => 10,
+                         :class => "cma-date cma-#{field.tr('_', '-')}",
+                         :data => {:initial => value.to_s} %>
+      <label class="inline" for="cma_<%= field %>_clear">
+        <%= check_box_tag "issue[#{field}]", 'none', false, :id => "cma_#{field}_clear",
+                          :data => {:disables => "#cma_#{field}"} %>
+        <%= l(:button_clear) %>
+      </label>
+      <% if @date_values[field][:mixed] %>
+        <em class="info cma-mixed"><%= l(:label_cma_mixed_values) %></em>
+      <% end %>
+    </p>
+  <% end %>
+  </div>
+  <% if @notes_allowed %>
+    <fieldset class="collapsible collapsed cma-dates-notes">
+      <legend onclick="toggleFieldset(this);" class="icon icon-collapsed" tabindex="0">
+        <%= sprite_icon('angle-right', :rtl => true) if respond_to?(:sprite_icon) %>
+        <%= l(:field_notes) %>
+      </legend>
+      <div style="display: none;">
+        <label for="cma_dates_notes" class="hidden-for-sighted"><%= l(:field_notes) %></label>
+        <%= text_area_tag 'notes', '', :id => 'cma_dates_notes', :cols => 60, :rows => 4,
+                          :class => 'wiki-edit', :data => cma_textarea_data %>
+      </div>
+    </fieldset>
+  <% end %>
+  <p class="buttons">
+    <%= submit_tag l(:button_submit), :name => nil, :class => 'cma-submit' %>
+    <%= link_to_function l(:button_cancel), 'hideModal(this);' %>
+  </p>
+<% end %>

@@ -1,0 +1,8 @@
+"ca":
+  label_cma_dates: "Dates"
+  label_cma_menu_position: "Posició al menú contextual"
+  label_cma_mixed_values: "(valors diferents)"
+  label_cma_position_bottom: "A baix"
+  label_cma_position_top: "A dalt"
+  text_cma_request_unknown: "La sol·licitud no s'ha completat, alguns canvis potser ja s'han desat. Podeu tornar a enviar sense risc: res no s'aplica dues vegades."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} també afegeix Dates al menú contextual, que apareixeria dues vegades. Desactiveu-ho a la configuració d'aquest connector o actualitzeu-lo a la %{fixed} o posterior."

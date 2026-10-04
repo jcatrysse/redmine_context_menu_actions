@@ -1,0 +1,8 @@
+"zh-TW":
+  label_cma_dates: "日期"
+  label_cma_menu_position: "在右鍵選單中的位置"
+  label_cma_mixed_values: "(數值不同)"
+  label_cma_position_bottom: "底端"
+  label_cma_position_top: "頂端"
+  text_cma_request_unknown: "請求未完成，部分變更可能已經儲存。可以放心再次送出：不會重複套用任何變更。"
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} 也會在右鍵選單中加入日期，因此會出現兩次。請在該外掛的設定中關閉，或將其升級至 %{fixed} 或更新版本。"

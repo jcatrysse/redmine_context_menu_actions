@@ -1,0 +1,8 @@
+"vi":
+  label_cma_dates: "Ngày"
+  label_cma_menu_position: "Vị trí trong menu ngữ cảnh"
+  label_cma_mixed_values: "(giá trị khác nhau)"
+  label_cma_position_bottom: "Dưới cùng"
+  label_cma_position_top: "Trên cùng"
+  text_cma_request_unknown: "Yêu cầu chưa hoàn tất, một số thay đổi có thể đã được lưu. Gửi lại là an toàn: không có gì được áp dụng hai lần."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} cũng thêm mục Ngày vào menu ngữ cảnh, nên mục này sẽ xuất hiện hai lần. Hãy tắt nó trong phần cài đặt của plugin đó, hoặc nâng cấp plugin lên %{fixed} trở lên."

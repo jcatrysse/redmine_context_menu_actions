@@ -1,0 +1,8 @@
+"pl":
+  label_cma_dates: "Daty"
+  label_cma_menu_position: "Pozycja w menu kontekstowym"
+  label_cma_mixed_values: "(różne wartości)"
+  label_cma_position_bottom: "Na dole"
+  label_cma_position_top: "Na górze"
+  text_cma_request_unknown: "Żądanie nie zostało ukończone, niektóre zmiany mogą być już zapisane. Ponowne wysłanie jest bezpieczne: nic nie zostanie zastosowane dwa razy."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} również dodaje Daty do menu kontekstowego, które pojawiłyby się dwa razy. Wyłącz to w ustawieniach tej wtyczki lub zaktualizuj ją do wersji %{fixed} lub nowszej."

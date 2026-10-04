@@ -1,0 +1,8 @@
+"en-GB":
+  label_cma_dates: "Dates"
+  label_cma_menu_position: "Position in the context menu"
+  label_cma_mixed_values: "(mixed values)"
+  label_cma_position_bottom: "Bottom"
+  label_cma_position_top: "Top"
+  text_cma_request_unknown: "The request did not complete, some changes may already be saved. Submitting again is safe: nothing is applied twice."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} also adds Dates to the context menu, so it would show twice. Switch it off in that plugin's settings, or upgrade it to %{fixed} or later."

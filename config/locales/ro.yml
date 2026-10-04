@@ -1,0 +1,8 @@
+"ro":
+  label_cma_dates: "Date"
+  label_cma_menu_position: "Poziția în meniul contextual"
+  label_cma_mixed_values: "(valori diferite)"
+  label_cma_position_bottom: "Jos"
+  label_cma_position_top: "Sus"
+  text_cma_request_unknown: "Cererea nu s-a încheiat, unele modificări pot fi deja salvate. Puteți trimite din nou fără risc: nimic nu se aplică de două ori."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} adaugă și el Date în meniul contextual, care ar apărea de două ori. Dezactivați-l în setările acelui plugin sau actualizați-l la %{fixed} sau mai nou."

@@ -1,0 +1,8 @@
+"fi":
+  label_cma_dates: "Päivämäärät"
+  label_cma_menu_position: "Sijainti pikavalikossa"
+  label_cma_mixed_values: "(eri arvoja)"
+  label_cma_position_bottom: "Alhaalla"
+  label_cma_position_top: "Ylhäällä"
+  text_cma_request_unknown: "Pyyntö ei valmistunut, osa muutoksista voi olla jo tallennettu. Lähettäminen uudelleen on turvallista: mitään ei tehdä kahdesti."
+  text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} lisää myös Päivämäärät pikavalikkoon, jolloin kohta näkyisi kahdesti. Poista se käytöstä kyseisen lisäosan asetuksista tai päivitä lisäosa versioon %{fixed} tai uudempaan."
