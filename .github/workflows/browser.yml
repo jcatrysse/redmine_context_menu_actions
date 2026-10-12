@@ -6,9 +6,6 @@ name: Browser
 # Chromium through the meeting flow on every supported version, and once on
 # MySQL, whose datetimes have whole seconds.
 on:
-  push:
-    branches: ['**']
-  pull_request:
   workflow_dispatch:
 
 concurrency:
