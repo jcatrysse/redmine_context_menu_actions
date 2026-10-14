@@ -61,9 +61,14 @@ module CmaSpecHelpers
 
   # A role with exactly the permissions given, attached to the user on the
   # project, so a spec states every permission it relies on.
+  #
+  # GEOxyz runs redmine_view_issue_description, which hides the description from
+  # roles without its own permission; the roles in production have it, so these
+  # get it too, only when that plugin is installed.
   def cma_member(user, project, permissions, issues_visibility: 'all')
     role = Role.new(:name => "cma role #{SecureRandom.hex(4)}", :issues_visibility => issues_visibility)
     role.permissions = permissions
+    role.permissions |= [:view_issue_description] if Redmine::Plugin.installed?(:redmine_view_issue_description)
     role.save!
     Member.where(:user_id => user.id, :project_id => project.id).destroy_all
     Member.create!(:principal => user, :project => project, :roles => [role])
