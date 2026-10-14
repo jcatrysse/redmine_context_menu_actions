@@ -95,20 +95,41 @@ RSpec.describe 'security' do
     end
   end
 
+  # Through the endpoint, as in production: a bulk edit hook of another plugin
+  # may expect the controller in its context (redmine_agile does).
+  def logged_while
+    logged = StringIO.new
+    previous = Rails.logger
+    Rails.logger = Logger.new(logged)
+    yield
+    logged.string
+  ensure
+    Rails.logger = previous
+  end
+
   it 'does not write the note text to the log when the database rejects it' do
     issue = cma_issue(project: project)
     secret = 'secret-note-text'
     allow_any_instance_of(Issue).to receive(:save).and_raise(ActiveRecord::StatementInvalid, "INSERT ... '#{secret}'")
-    logged = StringIO.new
-    previous = Rails.logger
-    Rails.logger = Logger.new(logged)
 
-    results = RedmineContextMenuActions::IssueUpdater.new([issue], :user => user, :attributes => {'notes' => secret}).call
+    log = logged_while { post_note(:ids => [issue.id], :notes => secret) }
 
-    expect(results.first.saved?).to be(false)
-    expect(logged.string).to include('ActiveRecord::StatementInvalid')
-    expect(logged.string).not_to include(secret)
-  ensure
-    Rails.logger = previous
+    expect(cma_saved_payload(session.response.body)['failed']).to eq([issue.id])
+    expect(log).to include('ActiveRecord::StatementInvalid')
+    expect(log).not_to include(secret)
+  end
+
+  # The message of any error can carry the note: an inspected journal on an
+  # older Ruby, or a plugin that puts it in its own exception.
+  it 'does not write the note text to the log whatever the error' do
+    issue = cma_issue(project: project)
+    secret = 'secret-note-text'
+    allow_any_instance_of(Issue).to receive(:save).and_raise(NoMethodError, "undefined method for #<Journal notes: \"#{secret}\">")
+
+    log = logged_while { post_note(:ids => [issue.id], :notes => secret) }
+
+    expect(cma_saved_payload(session.response.body)['failed']).to eq([issue.id])
+    expect(log).to include("[redmine_context_menu_actions] issue ##{issue.id}: NoMethodError")
+    expect(log).not_to include(secret)
   end
 end

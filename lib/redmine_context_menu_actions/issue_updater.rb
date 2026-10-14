@@ -95,11 +95,12 @@ module RedmineContextMenuActions
       ActiveModel::Type::Boolean.new.cast(@attributes['private_notes']) || false
     end
 
-    # The message of a database error carries the SQL, note text included, so
-    # only its class is logged.
+    # The message of an error can carry the note text: a database error has the
+    # SQL, an older Ruby inspects the receiver of a NoMethodError, another
+    # plugin's hook may raise anything. So only the class and backtrace are
+    # logged.
     def log_failure(issue, error)
-      message = error.is_a?(ActiveRecord::StatementInvalid) ? '(statement omitted)' : error.message
-      Rails.logger.error("[redmine_context_menu_actions] issue ##{issue.id}: #{error.class}: #{message}\n" \
+      Rails.logger.error("[redmine_context_menu_actions] issue ##{issue.id}: #{error.class} (message omitted)\n" \
                          "#{Array(error.backtrace).first(10).join("\n")}")
     end
 
