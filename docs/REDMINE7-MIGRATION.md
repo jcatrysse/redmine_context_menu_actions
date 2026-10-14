@@ -61,15 +61,15 @@ log line has the class and backtrace for every error, never the message. New
 spec: a NoMethodError whose message carries the note; it logged the note before
 the change.
 
-Open choice for Jan (B):
+Choice for Jan (B), decided by Jan on 2026-10-14: A.
 
-* A. No message for any error (implemented). Never leaks; the backtrace still
+* A. No message for any error (implemented, decided). Never leaks; the backtrace still
   names the file and line.
 * B. Log the message with the note text replaced. More detail, but an escaped or
   inspected note (`\n`, quotes) is not found and leaks.
 * C. Back to the message for anything but a database error.
 
-Recommendation: A.
+Recommendation was A; Jan chose A.
 
 ### 3. Test kit as root
 
@@ -84,7 +84,8 @@ root with sudo removed.
   from `master` (no `redmine70-migration` branch) added, 22 examples fail: every
   issue mail raises `super: no superclass method 'details_to_strings'` in the
   chain of redmine_drive (`alias_method`) and redmine_checklists (`prepend`).
-  Those four are left out of the combined set below.
+  Those four are left out of the combined set below. Jan decided (2026-10-14)
+  they do not move to Redmine 7: out of scope.
 * In the combined browser run Puma logs 102 "SSL connection to a non-SSL Puma"
   lines (0 alone): some plugin's page requests an https URL. No failed request,
   no test affected.
@@ -119,6 +120,7 @@ e59224c, redmine_zenedit f36e1ff, redmine_view_issue_description ed584b4.
 | Browser alone (Chromium, Playwright 1.56.1) | 40 tests, 33 pass, 0 fail, 7 skipped (the screenshot specs, run separately) |
 | Browser screenshots alone | 7 tests, 7 pass; written to `docs/screenshots/7.0` |
 | Browser with the 39 plugins | 40 tests, 33 pass, 0 fail, 7 skipped; no 5xx in the server log |
+| Coordinator, 44-plugin set, 177eb5e | 473 examples, 0 failures, 4 pending |
 | `.codex/test_scripts.sh` | 31 checks, 0 failures |
 | ShellCheck, RuboCop 1.88.2 | clean |
 
