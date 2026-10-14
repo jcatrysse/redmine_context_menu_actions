@@ -172,6 +172,26 @@ cma_rspec_targets() {
   return 0
 }
 
+# Runs a command as root: through sudo, or directly when the script already runs
+# as root, as in a container that has no sudo at all.
+cma_as_root() {
+  if [ "$(id -u)" = 0 ]; then
+    "$@"
+  else
+    sudo "$@"
+  fi
+}
+
+# Runs a command as the postgres user. "sudo -u postgres" needs sudo, which a
+# root container may not have; runuser is part of util-linux and needs root.
+cma_as_postgres() {
+  if [ "$(id -u)" = 0 ]; then
+    runuser -u postgres -- "$@"
+  else
+    sudo -u postgres "$@"
+  fi
+}
+
 # Runs a command inside the Redmine checkout, through mise or rbenv when in use.
 run() {
   if [ "${USE_MISE:-0}" = 1 ]; then
