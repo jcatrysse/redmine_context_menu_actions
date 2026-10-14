@@ -3,6 +3,10 @@
 ## Unreleased
 
 ### Fixed
+* The log line for an issue that could not be saved no longer carries the
+  error message, for any error: besides a database error's SQL, the message of
+  another error can hold the note text too. Class and backtrace remain.
+* `.codex/test_setup.sh` provisions the database as root without sudo.
 * On Redmine 5.1 with a plugin that defines `sprite_icon`, Dates lost its
   calendar icon and the other items went through that plugin's sprite. Icons now
   follow the Redmine version.
