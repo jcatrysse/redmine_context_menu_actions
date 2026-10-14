@@ -229,6 +229,30 @@ expect_output 'relative, inside'   "/cma-test-scripts-$$/" exclude_for "cma-test
 expect_output 'outside the plugin' '' exclude_for "$TMP/outside"
 expect_output 'not cloned yet'     '' exclude_for "$TMP/missing"
 
+# A root container may have no sudo at all; test_setup.sh then has to run its
+# commands directly, and become postgres through runuser.
+echo
+echo "cma_as_root and cma_as_postgres work with and without sudo"
+mkdir -p "$TMP/privbin"
+# Expanded by the stubs, not here.
+# shellcheck disable=SC2016
+printf '#!/bin/sh\necho "$CMA_TEST_UID"\n' > "$TMP/privbin/id"
+printf '#!/bin/sh\necho "sudo $*"\n' > "$TMP/privbin/sudo"
+printf '#!/bin/sh\necho "runuser $*"\n' > "$TMP/privbin/runuser"
+printf '#!/bin/sh\necho "direct $*"\n' > "$TMP/privbin/psql"
+chmod +x "$TMP/privbin/"*
+# $1 is the uid id reports, the rest the helper call.
+as_uid() {
+  local uid="$1"; shift
+  # Expanded by the inner bash, not here.
+  # shellcheck disable=SC2016
+  PATH="$TMP/privbin:$PATH" CMA_TEST_UID="$uid" helper '"$@"' "$@"
+}
+expect_output 'root, as root'         'direct -c x'                       as_uid 0 cma_as_root psql -c x
+expect_output 'root, as postgres'     'runuser -u postgres -- psql -c x'  as_uid 0 cma_as_postgres psql -c x
+expect_output 'user, as root'         'sudo psql -c x'                    as_uid 1000 cma_as_root psql -c x
+expect_output 'user, as postgres'     'sudo -u postgres psql -c x'        as_uid 1000 cma_as_postgres psql -c x
+
 echo
 if [ "$failures" -eq 0 ]; then
   echo "$checks checks, 0 failures"

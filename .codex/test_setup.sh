@@ -10,7 +10,8 @@
 #   CMA_DB                 postgresql (default), mysql or mariadb
 #   CMA_DB_NAME/_USER/_PASSWORD/_HOST/_PORT
 #                          connection details, defaults suit a local install
-#   CMA_PROVISION_DB       1 to install and start the server locally (needs sudo),
+#   CMA_PROVISION_DB       1 to install and start the server locally (needs sudo,
+#                          or root),
 #                          0 to assume it is already reachable. Defaults to 0 in
 #                          CI, 1 otherwise.
 #   CMA_RUBY               pin the Ruby version instead of deriving it
@@ -56,29 +57,29 @@ cma_select_ruby install
 # --- Database server --------------------------------------------------------
 if [ "$CMA_PROVISION_DB" = 1 ]; then
   echo "Provisioning a local $CMA_ENGINE server (set CMA_PROVISION_DB=0 to skip)."
-  sudo apt-get update
+  cma_as_root apt-get update
   if [ "$CMA_ENGINE" = postgresql ]; then
-    sudo apt-get install -y build-essential libpq-dev postgresql postgresql-contrib
-    sudo service postgresql start
+    cma_as_root apt-get install -y build-essential libpq-dev postgresql postgresql-contrib
+    cma_as_root service postgresql start
     # CREATEDB is all the suite needs; no superuser, and a name of its own so an
     # existing development role is never touched.
-    sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$CMA_DB_USER'" | grep -q 1 ||
-      sudo -u postgres psql -c "CREATE ROLE $CMA_DB_USER WITH LOGIN CREATEDB PASSWORD '$CMA_DB_PASSWORD';"
-    sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='$CMA_DB_NAME'" | grep -q 1 ||
-      sudo -u postgres createdb -O "$CMA_DB_USER" "$CMA_DB_NAME"
+    cma_as_postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$CMA_DB_USER'" | grep -q 1 ||
+      cma_as_postgres psql -c "CREATE ROLE $CMA_DB_USER WITH LOGIN CREATEDB PASSWORD '$CMA_DB_PASSWORD';"
+    cma_as_postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='$CMA_DB_NAME'" | grep -q 1 ||
+      cma_as_postgres createdb -O "$CMA_DB_USER" "$CMA_DB_NAME"
   else
     # Named packages, not default-mysql-server: on Ubuntu that is MariaDB.
     if [ "$CMA_ENGINE" = mysql ]; then
-      sudo apt-get install -y build-essential default-libmysqlclient-dev mysql-server
+      cma_as_root apt-get install -y build-essential default-libmysqlclient-dev mysql-server
     else
-      sudo apt-get install -y build-essential default-libmysqlclient-dev mariadb-server
+      cma_as_root apt-get install -y build-essential default-libmysqlclient-dev mariadb-server
     fi
-    sudo service mariadb start 2>/dev/null || sudo service mysql start
-    sudo mysql -e "CREATE DATABASE IF NOT EXISTS \`$CMA_DB_NAME\` CHARACTER SET utf8mb4;"
-    sudo mysql -e "CREATE USER IF NOT EXISTS '$CMA_DB_USER'@'$CMA_DB_HOST' IDENTIFIED BY '$CMA_DB_PASSWORD';"
-    sudo mysql -e "GRANT ALL ON \`$CMA_DB_NAME\`.* TO '$CMA_DB_USER'@'$CMA_DB_HOST'; FLUSH PRIVILEGES;"
+    cma_as_root service mariadb start 2>/dev/null || cma_as_root service mysql start
+    cma_as_root mysql -e "CREATE DATABASE IF NOT EXISTS \`$CMA_DB_NAME\` CHARACTER SET utf8mb4;"
+    cma_as_root mysql -e "CREATE USER IF NOT EXISTS '$CMA_DB_USER'@'$CMA_DB_HOST' IDENTIFIED BY '$CMA_DB_PASSWORD';"
+    cma_as_root mysql -e "GRANT ALL ON \`$CMA_DB_NAME\`.* TO '$CMA_DB_USER'@'$CMA_DB_HOST'; FLUSH PRIVILEGES;"
     # browser_test.sh runs on a database of its own.
-    sudo mysql -e "GRANT ALL ON \`${CMA_BROWSER_DB_NAME:-${CMA_DB_NAME}_browser}\`.* TO '$CMA_DB_USER'@'$CMA_DB_HOST'; FLUSH PRIVILEGES;"
+    cma_as_root mysql -e "GRANT ALL ON \`${CMA_BROWSER_DB_NAME:-${CMA_DB_NAME}_browser}\`.* TO '$CMA_DB_USER'@'$CMA_DB_HOST'; FLUSH PRIVILEGES;"
   fi
 fi
 
