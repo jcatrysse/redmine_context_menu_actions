@@ -15,7 +15,7 @@ permissions:
 jobs:
   rubocop:
     name: RuboCop
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: >-
       github.event_name != 'pull_request' ||
       github.event.pull_request.head.repo.full_name != github.repository
@@ -37,7 +37,7 @@ jobs:
 
   shellcheck:
     name: ShellCheck
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: >-
       github.event_name != 'pull_request' ||
       github.event.pull_request.head.repo.full_name != github.repository
@@ -59,7 +59,7 @@ jobs:
 
   yaml:
     name: Locales parse
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: >-
       github.event_name != 'pull_request' ||
       github.event.pull_request.head.repo.full_name != github.repository
