@@ -68,7 +68,7 @@ jobs:
       - name: Check out Redmine ${{ matrix.redmine }} and install the plugin
         run: ./.codex/redmine_clone.sh ${{ matrix.redmine }}
 
-      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+      - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: false
@@ -86,7 +86,7 @@ jobs:
       - name: Install gems and migrate
         run: ./.codex/test_setup.sh
 
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
 
