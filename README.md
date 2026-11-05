@@ -7,10 +7,13 @@ reload, no lost scroll position, no lost selection.
 * **Add a note** to one or several issues, from the context menu.
 * **Add a note** straight from the Last notes block of the issue list.
 * **Dates**: change or clear the start and due date of one or several issues.
+* **Export (JSON)**: download one or several issues, with their journals, as one
+  JSON file in the format of Redmine's REST API.
 
-No permissions of its own, no project module, no database migration, no core
-file changed. Every action is allowed exactly when Redmine allows the same change
-on the issue page.
+No project module, no database migration, no core file changed. Add a note and
+Dates are allowed exactly when Redmine allows the same change on the issue page.
+Export (JSON) has one permission of its own, granted to no role, and is switched
+off until an administrator turns it on.
 
 ![Context menu](docs/screenshots/6.1/01-context-menu-single.png)
 
@@ -27,7 +30,7 @@ PostgreSQL, and on MySQL for 6.1):
 | 5.1-stable | 6.1 | 3.2 | 16 | 8 |
 | 6.0-stable | 7.2 | 3.3 | 16 | 8 |
 | 6.1-stable | 7.2 | 3.4 | 16 | 8 |
-| 7.0-stable | 8.1 | 3.4 | 16 | 8 |
+| 7.0-stable | 8.1 | 4.0 | 16 | 8 |
 
 A weekly run repeats the table against the tip of each branch and Redmine trunk.
 [COMPATIBILITY.md](COMPATIBILITY.md) lists every place where the plugin relies on
@@ -71,8 +74,8 @@ Right click one or more issues, choose **Add a note**.
 
 ![The list after a save](docs/screenshots/6.1/07-list-after-save.png)
 
-Add a note and Dates sit together, right above **Edit** by default; the settings
-can move both to the end of the menu.
+Add a note, Dates and Export (JSON) sit together, right above **Edit** by
+default; the settings can move them to the end of the menu.
 
 ### Add a note from Last notes
 
@@ -104,6 +107,42 @@ Right click one or more issues, choose **Dates**.
 
 ![Several issues with different dates](docs/screenshots/6.1/10-dates-dialog-mixed.png)
 
+### Export (JSON)
+
+Right click one or more issues, choose **Export (JSON)**. The browser downloads
+one file, `issues-<date>-<time>.json`; the list stays as it was, with the same
+selection.
+
+```text
+{
+  "exported_on": "2026-11-05T14:02:11Z",
+  "exported_by": {"id": 5, "name": "Jan Catrysse"},
+  "redmine_version": "7.0.0.stable",
+  "issues": [{"id": 1, "project": {...}, "subject": "...", "journals": [...], ...}],
+  "skipped": [{"id": 12, "reason": "forbidden"}]
+}
+```
+
+* Each entry in `issues` is exactly what `GET /issues/:id.json?include=journals,
+  attachments,relations,children,watchers,changesets` answers you: the same
+  fields, the same journals, rendered by Redmine's own API view. What the API
+  hides from you is hidden here too: private notes without **View private
+  notes**, private issues, custom fields not visible to your roles and their
+  history, watchers without **View watchers**, spent time without **View spent
+  time**, and what other plugins take out of the API, such as the fields
+  redmine_issue_field_visibility hides.
+* Attachments are listed with their metadata (name, size, author, URL), as in the
+  API; the files themselves are not in the export.
+* An issue the API would refuse you is not exported; it is listed in `skipped`
+  with `not_found` or `forbidden`, as the API answers 404 or 403. That includes an
+  issue redmine_view_issue_description does not let you open.
+* At most **Issues export limit** issues at once (100 by default). With more
+  selected, no file is sent and the list says why; a file never holds part of
+  the selection without saying so.
+* No PDF.
+
+![Export (JSON) in the context menu](docs/screenshots/6.1/02-context-menu-multi.png)
+
 ### Where it works
 
 The issue context menu appears on the issue list, My page, the Gantt chart, the
@@ -113,7 +152,10 @@ notes block is updated wherever it is shown.
 
 ## Permissions
 
-The plugin adds no permission. It uses Redmine's:
+The plugin adds one permission, **Export issues (JSON)** (`export_issues_json`),
+in the Issue tracking module. No role has it until an administrator ticks it in
+Administration, Roles and permissions. Add a note and Dates use Redmine's own
+permissions:
 
 | Action | Needs |
 |---|---|
@@ -121,6 +163,10 @@ The plugin adds no permission. It uses Redmine's:
 | Private notes | **Set notes as private** on every selected issue |
 | `@` autocomplete in the dialog | **Add watchers**, as on the issue page |
 | Dates | **Edit issues** (or **Edit own issues**); a date the workflow makes read-only, or a parent's date derived from its subtasks, is not offered |
+| Export (JSON) | **Export issues (JSON)** on the project of every selected issue, and **View issues**; what each issue contains follows your other permissions, as in the API. It is a read permission, so it also works on a closed project |
+
+Without the permission the menu has no Export (JSON), and the export URL answers
+403.
 
 A user with only **Add notes** can use Add a note. Redmine's own bulk edit needs
 **Edit issues**, which is why the plugin has its own endpoint.
@@ -138,7 +184,15 @@ Administration, Plugins, Context Menu Actions, Configure.
 | Add a note | on |
 | Last notes: Add a note | on |
 | Dates | on |
-| Position in the context menu, for Add a note and Dates | top (above Edit) |
+| Export (JSON) | **off** |
+| Issues export limit, for Export (JSON) | 100 (1 to 200) |
+| JSON export options: History, Files, Related issues, Subtasks, Watchers, Associated revisions | all on |
+| Position in the context menu, for Add a note, Dates and Export (JSON) | top (above Edit) |
+
+The export options are the `include` values of the API: journals, attachments,
+relations, children, watchers and changesets. The limit keeps the request within
+the URL length servers and proxies accept: the selected ids travel in the URL, as
+in Redmine's own bulk links.
 
 ![Settings](docs/screenshots/6.1/12-settings.png)
 
@@ -160,8 +214,9 @@ rm -rf /path/to/redmine/plugins/redmine_context_menu_actions
 # restart Redmine
 ```
 
-The plugin stores nothing but its settings. Notes and dates it saved are ordinary
-Redmine journals and stay.
+The plugin stores nothing but its settings and, on roles that were given it, the
+export permission. Notes and dates it saved are ordinary Redmine journals and
+stay.
 
 ## Next to redmine_issue_todo_lists2
 

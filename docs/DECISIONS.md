@@ -6,7 +6,7 @@ behaviour: a safe default is implemented, and the options are listed for Jan.
 
 ## Beslist
 
-- No permissions and no project module of its own: every action reuses core permissions, so the rules equal core and an administrator configures nothing.
+- No project module of its own; Add a note and Dates reuse core permissions, so the rules equal core and an administrator configures nothing. Export (JSON) (November 2026) has one permission of its own, see below.
 - Supported: Redmine 5.1, 6.0, 6.1 and 7.0 (`requires_redmine 5.1`), tested on PostgreSQL and MySQL; MariaDB is left to the local scripts.
 - Scaffolding, CI, RuboCop config and spec layout copied from redmine_parent_child_filters, `PCF_` renamed to `CMA_`.
 - `.codex` scripts also select a Ruby through rbenv when mise is absent, picking the newest installed Ruby the checkout accepts.
@@ -119,6 +119,19 @@ Jan asked for a second opinion from another model. The production code (29 files
 | 2 | A slow answer to an earlier dialog request replaced a dialog opened after it, losing what was typed | Real | An older dialog request still on its way is aborted when a new one starts; browser spec with a held request |
 | 3 | The duplicate check ignored the private flag | Real | The flag is part of the check; rspec. The other-tab case is left as described above |
 | 4 | `sprite_icon('angle-right', :rtl => true)` would pass the hash as the label | Not a defect | Every Redmine with `sprite_icon` (6.0, 6.1, 7.0) takes keyword arguments, and core calls it the same way (`context_menus/time_entries.html.erb`) |
+
+### Export (JSON) (Jan, 5 November 2026)
+
+- Asked by Jan: one JSON file for the selected issues, with journals and history, behind a permission and a setting, on 5.1 and 7.0. No PDF.
+- No serializer of its own: `ContextMenuActionsExportController` sets the instance variables `IssuesController#show` sets for `format.api` and renders core's `issues/show.api.rsb` per issue with `params[:format] = 'json'` and `params[:include]` from the settings. The entry is the object inside `{"issue":...}`, inserted byte for byte. Because the view, its helpers and `api_request?` are core's, plugins that change the API response (redmine_issue_field_visibility) change the file the same way.
+- What the API checks before the view is mirrored: `find_issue` (404, 403 for an invisible issue), `authorize` for issues#show, and redmine_view_issue_description's before_action via `Issue#detail_access_granted?`. A contract example fails when any other before_action runs on `IssuesController#show`, so a plugin that adds one is noticed instead of bypassed.
+- Refused issues go to `skipped` with `not_found` or `forbidden`, as the API answers 404 or 403. The request as a whole answers 404 while the export is off or no id exists, 403 without `export_issues_json` on the project of every visible issue (the menu's own rule) or when none is visible.
+- Over the limit: no file, a flash message on the page the menu was opened from. Counted on the distinct ids, before anything is loaded.
+- GET with `ids[]` like core's bulk links; the limit is capped at 200 so the URL stays under 8 KB with a long `back_url`. Read only, so no CSRF token is needed; `Cache-Control: no-store`, `Content-Disposition: attachment`, `application/json`.
+- `export_issues_json` is a read permission, as `view_issues` is: an export changes nothing, so it works on a closed project, where the API still shows the issue.
+- The session only: no `accept_api_auth`, an API key does not log in to the export.
+- Strings: two keys of its own (the permission label, which Redmine looks up by name, and the limit message); the rest is core's (`button_export`, `setting_issues_export_limit`, `label_export_options` and the issue page's own names for the parts).
+- Core's context menu keeps the selection only when a click lands on the link, not on the sprite and label inside it (6.0 and later). The download keeps the page, so the plugin CSS lets the export link take the click.
 
 ## Open, keuze voor Jan
 

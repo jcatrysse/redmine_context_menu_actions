@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(valores diferentes)"
   label_cma_position_bottom: "No final"
   label_cma_position_top: "No topo"
+  permission_export_issues_json: "Exportar tarefas (JSON)"
+  text_cma_export_limit_exceeded: "%{count} tarefas selecionadas, mais do que o limite de exportação de %{max}. Nada foi exportado."
   text_cma_request_unknown: "A solicitação não foi concluída, algumas alterações podem já estar salvas. Você pode enviar novamente com segurança: nada é aplicado duas vezes."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} também adiciona Datas ao menu de contexto, que apareceria duas vezes. Desative-o nas configurações desse plugin ou atualize-o para a %{fixed} ou posterior."

@@ -14,9 +14,11 @@ RSpec.describe 'plugin registration' do
     expect { plugin.requires_redmine(:version_or_higher => '5.1') }.not_to raise_error
   end
 
-  it 'adds no permission and no project module of its own' do
-    own = Redmine::AccessControl.permissions.select { |p| p.project_module.to_s.include?('context_menu') }
-    expect(own).to eq([])
+  it 'adds one permission, export_issues_json in issue tracking, and no project module of its own' do
+    own = Redmine::AccessControl.permissions.select do |p|
+      p.actions.any? { |action| action.start_with?('context_menu_actions') }
+    end
+    expect(own.map { |p| [p.name, p.project_module] }).to eq([[:export_issues_json, :issue_tracking]])
     expect(Redmine::AccessControl.available_project_modules.map(&:to_s).grep(/context_menu/)).to eq([])
   end
 
@@ -25,7 +27,10 @@ RSpec.describe 'plugin registration' do
       'enable_notes' => true,
       'menu_position' => 'top',
       'enable_last_notes_link' => true,
-      'enable_dates' => true
+      'enable_dates' => true,
+      'enable_export_json' => false,
+      'export_json_limit' => '100',
+      'export_json_include' => %w[journals attachments relations children watchers changesets]
     )
   end
 
@@ -57,6 +62,22 @@ RSpec.describe 'plugin registration' do
 
       cma_settings('enable_notes' => '1')
       expect(RedmineContextMenuActions.last_notes_link_enabled?).to be(true)
+    end
+
+    it 'keeps the export limit between 1 and 200, and falls back to 100 for anything else' do
+      {'0' => 1, '1' => 1, '150' => 150, '200' => 200, '5000' => 200, 'x' => 100, '' => 100, '-5' => 100}.each do |stored, limit|
+        cma_settings('export_json_limit' => stored)
+        expect(RedmineContextMenuActions.export_json_limit).to eq(limit), stored.inspect
+      end
+    end
+
+    it 'keeps only the known parts of the export, in core order, and all of them for an old install' do
+      cma_settings('export_json_include' => %w[watchers allowed_statuses journals] + ['', nil])
+      expect(RedmineContextMenuActions.export_json_include).to eq(%w[journals watchers])
+
+      Setting.plugin_redmine_context_menu_actions = {'enable_notes' => '1'}
+      expect(RedmineContextMenuActions.export_json_include).to eq(RedmineContextMenuActions::EXPORT_PARTS)
+      expect(RedmineContextMenuActions.export_json_enabled?).to be(false)
     end
 
     it 'falls back to the top for an unknown position' do

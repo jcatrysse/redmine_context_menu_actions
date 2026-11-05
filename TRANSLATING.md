@@ -19,6 +19,10 @@ Most of what the plugin shows is Redmine's own translation in that language:
 | Your session has expired. Please login again. | `error_session_expired` | a request after the session ended |
 | The issue has been updated by an other user while you were editing it. | `notice_issue_update_conflict` | an issue changed twice while saving |
 | Last notes | `label_last_notes` | setting label |
+| Export | `button_export` | menu item and setting, as "Export (JSON)" |
+| Issues export limit | `setting_issues_export_limit` | setting label |
+| JSON export options | `label_export_options` | setting label |
+| History, Files, Related issues, Subtasks, Watchers, Associated revisions | `label_history`, `label_attachment_plural`, `label_related_issues`, `label_subtask_plural`, `label_issue_watchers`, `label_associated_revisions` | the parts of the export, as on the issue page |
 
 A user who reads "Notitie toevoegen" on the issue page reads the same words in
 the context menu. Where Redmine's own translation is still English in a locale,
@@ -34,9 +38,14 @@ the plugin is English there too, and the fix belongs upstream, in Redmine.
 | `label_cma_position_top` / `_bottom` | Top / Bottom |
 | `text_cma_todo_lists_dates_conflict` | the warning about redmine_issue_todo_lists2 before 2.3.0 |
 | `text_cma_request_unknown` | the request did not complete; some changes may be saved, submitting again is safe |
+| `permission_export_issues_json` | Export issues (JSON), the permission on the roles page |
+| `text_cma_export_limit_exceeded` | more issues selected than the export limit, nothing exported |
 
 Keys carry the `cma_` prefix so they cannot collide with another plugin's
-(redmine_issue_todo_lists2 has its own `field_dates`).
+(redmine_issue_todo_lists2 has its own `field_dates`). The permission is the
+exception: Redmine looks its label up as `permission_<name>`. Its translation
+follows the language's own "Export wiki pages" (`permission_export_wiki_pages`)
+and word for issues (`label_issue_plural`).
 
 The word for Dates follows the language's word for the start and due date
 fields, for example "Termine" in German and "Datums" in Dutch.
@@ -49,7 +58,7 @@ fields, for example "Termine" in German and "Datums" in Dutch.
   really is the same (French "Dates") is listed as an exception in the spec.
 * Keys and values are quoted. Psych reads a bare `no:` as `false`, which is the
   Norwegian locale key.
-* `%{version}` and `%{fixed}` stay as they are.
+* `%{version}`, `%{fixed}`, `%{count}` and `%{max}` stay as they are.
 
 ## Checking your work
 

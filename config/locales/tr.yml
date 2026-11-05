@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(farklı değerler)"
   label_cma_position_bottom: "Altta"
   label_cma_position_top: "Üstte"
+  permission_export_issues_json: "İşleri dışarı aktar (JSON)"
+  text_cma_export_limit_exceeded: "%{count} iş seçildi, dışarı aktarma sınırı olan %{max} değerinden fazla. Hiçbir şey dışarı aktarılmadı."
   text_cma_request_unknown: "İstek tamamlanmadı, bazı değişiklikler zaten kaydedilmiş olabilir. Yeniden göndermek güvenlidir: hiçbir şey iki kez uygulanmaz."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} de bağlam menüsüne Tarihler ekler, bu yüzden iki kez görünür. Bunu o eklentinin ayarlarından kapatın ya da eklentiyi %{fixed} veya daha yeni bir sürüme yükseltin."

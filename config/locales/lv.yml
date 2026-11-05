@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(atšķirīgas vērtības)"
   label_cma_position_bottom: "Apakšā"
   label_cma_position_top: "Augšā"
+  permission_export_issues_json: "Eksportēt uzdevumus (JSON)"
+  text_cma_export_limit_exceeded: "Izvēlēti %{count} uzdevumi, vairāk nekā eksporta ierobežojums %{max}. Nekas netika eksportēts."
   text_cma_request_unknown: "Pieprasījums netika pabeigts, dažas izmaiņas jau var būt saglabātas. Iesniegt vēlreiz ir droši: nekas netiek piemērots divreiz."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} arī pievieno Datumi konteksta izvēlnei, tāpēc tie parādītos divreiz. Izslēdziet to šī spraudņa iestatījumos vai atjauniniet to uz %{fixed} vai jaunāku."

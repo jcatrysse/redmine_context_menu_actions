@@ -16,6 +16,14 @@ module RedmineContextMenuActions
       issues.any? && issues.all? { |issue| issue.notes_addable?(user) }
     end
 
+    # The export_issues_json permission on the project of every issue. Visibility
+    # per issue is the export's own business: what the API would refuse is
+    # listed as skipped.
+    def export_allowed?(issues, user = User.current)
+      issues = Array(issues)
+      issues.any? && user.allowed_to?(:export_issues_json, issues.map(&:project).uniq)
+    end
+
     # The private_notes safe attribute: set_notes_private on the issue's project.
     def private_notes_allowed?(issues, user = User.current)
       issues = Array(issues)

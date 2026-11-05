@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(verschillende waarden)"
   label_cma_position_bottom: "Onderaan"
   label_cma_position_top: "Bovenaan"
+  permission_export_issues_json: "Issues exporteren (JSON)"
+  text_cma_export_limit_exceeded: "%{count} issues geselecteerd, meer dan de exportlimiet van %{max}. Er is niets geëxporteerd."
   text_cma_request_unknown: "Het verzoek is niet afgerond, sommige wijzigingen zijn mogelijk al opgeslagen. Opnieuw verzenden is veilig: niets wordt twee keer toegepast."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} voegt ook Datums toe aan het contextmenu, dat dan twee keer verschijnt. Schakel het uit in de instellingen van die plugin, of werk die bij naar %{fixed} of hoger."

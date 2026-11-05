@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(различни стойности)"
   label_cma_position_bottom: "Долу"
   label_cma_position_top: "Горе"
+  permission_export_issues_json: "Експорт на задачи (JSON)"
+  text_cma_export_limit_exceeded: "Избрани са %{count} задачи, повече от лимита за експорт от %{max}. Нищо не е експортирано."
   text_cma_request_unknown: "Заявката не завърши, някои промени може вече да са записани. Повторното изпращане е безопасно: нищо не се прилага два пъти."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} също добавя Дати в контекстното меню, които тогава ще се показват два пъти. Изключете ги в настройките на този плъгин или го обновете до %{fixed} или по-нова."

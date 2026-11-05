@@ -17,6 +17,8 @@ RSpec.describe 'translations' do
     notice_successful_update notice_failed_to_save_issues notice_not_authorized
     notice_file_not_found notice_issue_update_conflict error_invalid_authenticity_token
     error_session_expired text_warn_on_leaving_unsaved
+    button_export setting_issues_export_limit label_export_options label_history label_attachment_plural
+    label_related_issues label_subtask_plural label_issue_watchers label_associated_revisions
   ].freeze
 
   it 'ships the 50 languages Redmine ships' do

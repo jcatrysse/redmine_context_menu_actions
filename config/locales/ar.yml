@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(قيم مختلفة)"
   label_cma_position_bottom: "في الأسفل"
   label_cma_position_top: "في الأعلى"
+  permission_export_issues_json: "تصدير بنود العمل (JSON)"
+  text_cma_export_limit_exceeded: "تم تحديد %{count} من بنود العمل، وهذا أكثر من حد التصدير البالغ %{max}. لم يتم تصدير أي شيء."
   text_cma_request_unknown: "لم يكتمل الطلب، وقد تكون بعض التغييرات محفوظة بالفعل. الإرسال مرة أخرى آمن: لا يُطبَّق أي شيء مرتين."
   text_cma_todo_lists_dates_conflict: "يضيف Issue To-do Lists %{version} أيضًا التواريخ إلى قائمة السياق، فتظهر مرتين. أوقفها في إعدادات تلك الإضافة أو حدّثها إلى %{fixed} أو أحدث."

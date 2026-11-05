@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Added
+* **Export (JSON)** in the issue context menu: one or several issues, with their
+  journals, attachments (metadata), relations, subtasks, watchers and
+  changesets, as one JSON file. Each entry is exactly what
+  `GET /issues/:id.json?include=...` answers the user, rendered by core's API
+  view; an issue the API would refuse is listed as skipped with the reason.
+  New permission **Export issues (JSON)** (`export_issues_json`, Issue tracking),
+  granted to no role. New settings: Export (JSON) (off by default), Issues
+  export limit (100, at most 200) and the parts to include (all by default).
+  Over the limit nothing is exported and the list says why.
+
+### Changed
+* CI runs Redmine 7.0 (and trunk) on Ruby 4.0 instead of 3.4; the `.codex`
+  scripts know Ruby 4.0 exists (`CMA_RUBY_MAX` 4.0).
+
 ### Fixed
 * The log line for an issue that could not be saved no longer carries the
   error message, for any error: besides a database error's SQL, the message of

@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(rôzne hodnoty)"
   label_cma_position_bottom: "Dole"
   label_cma_position_top: "Hore"
+  permission_export_issues_json: "Export úloh (JSON)"
+  text_cma_export_limit_exceeded: "Vybraných %{count} úloh, viac ako limit exportu %{max}. Nič nebolo exportované."
   text_cma_request_unknown: "Požiadavka nebola dokončená, niektoré zmeny už môžu byť uložené. Odoslať znova je bezpečné: nič sa nepoužije dvakrát."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} tiež pridáva Dátumy do kontextovej ponuky, ktoré by sa potom zobrazili dvakrát. Vypnite ich v nastaveniach tohto pluginu alebo ho aktualizujte na %{fixed} či novšiu."
