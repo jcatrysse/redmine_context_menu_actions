@@ -106,7 +106,7 @@ The ten open items of the first report, as Jan decided them.
 6. Relative date shift: an idea for 1.1, not in 1.0.
 7. The optional note in the Dates dialog stays, collapsed, as built.
 8. Version 1.0.0.
-9. Left to Claude. Chosen: Dates right below Add a note, both above Edit by default and both at the end when the setting says so. It keeps the two meeting actions together, the shortest path for the mouse, and one setting places both. The setting is renamed `menu_position`; 1.0.0 is the first release, so there is nothing stored to migrate. On the settings page it moved below both actions.
+9. Not a decision of Jan; chosen during implementation: Dates right below Add a note, both above Edit by default and both at the end when the setting says so. It keeps the two meeting actions together, the shortest path for the mouse, and one setting places both. The setting is renamed `menu_position`; 1.0.0 is the first release, so there is nothing stored to migrate. On the settings page it moved below both actions.
 10. Ruby 3.0 or later is the plugin's minimum (README, CHANGELOG; RuboCop targets 3.0). There is no runtime check: a check that refuses to load would stop Redmine itself from booting.
 
 ### Code review by gpt-5.5 (OpenAI API, 5 October)
