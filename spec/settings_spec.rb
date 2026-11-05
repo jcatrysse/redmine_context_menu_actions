@@ -14,9 +14,9 @@ RSpec.describe 'plugin settings' do
   it 'renders an input for every setting, each with a label' do
     body = settings_page
 
-    RedmineContextMenuActions::DEFAULT_SETTINGS.each_key do |key|
-      next if key == 'export_json_include' # a list, see below
-
+    # Listed here rather than read from DEFAULT_SETTINGS, so a control that
+    # disappears from the page and the defaults together still fails.
+    %w[enable_notes enable_last_notes_link enable_dates menu_position enable_export_json export_json_limit].each do |key|
       expect(body).to include(%(name="settings[#{key}]")), key
       expect(body).to include(%(<label for="settings_#{key}">)), key
       expect(body).to match(/<(input|select)[^>]*id="settings_#{key}"/), key
@@ -59,7 +59,7 @@ RSpec.describe 'plugin settings' do
 
       expect(body[/<input[^>]*id="settings_enable_export_json"[^>]*>/]).not_to include('checked')
       expect(body[/<input[^>]*id="settings_export_json_limit"[^>]*>/]).to include('value="100"')
-      RedmineContextMenuActions::EXPORT_PARTS.each do |part|
+      %w[journals attachments relations children watchers changesets].each do |part|
         expect(body[/<input[^>]*id="settings_export_json_include_#{part}"[^>]*>/]).to include('checked'), part
       end
       expect(body).to include(%(<input type="hidden" name="settings[export_json_include][]" value="" autocomplete="off" />))
