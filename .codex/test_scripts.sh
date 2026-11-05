@@ -90,7 +90,8 @@ done
 
 # The Ruby version is derived from the checkout's Gemfile, and a version that was
 # never released is worse than a wrong guess: bundler fails with an error about a
-# Ruby nobody can install. Redmine 7 allows "< 4.1.0", which is the case that bit.
+# Ruby nobody can install. Redmine 7.0 allowed "< 4.1.0" before Ruby 4.0 was out,
+# which is the case that bit.
 echo
 echo "cma_detect_ruby_version stays inside what exists"
 detect() {
@@ -123,7 +124,8 @@ expect_version() {
 
 expect_version 'Redmine 5.x range'  "'>= 2.7.0', '< 3.3.0'" 3.2
 expect_version 'Redmine 6.x range'  "'>= 3.1.0', '< 3.5.0'" 3.4
-expect_version 'unreleased upper'   "'>= 3.2.0', '< 4.1.0'" 3.4
+expect_version 'Redmine 7.0 range'  "'>= 3.2.0', '< 4.1.0'" 4.0
+expect_version 'unreleased upper'   "'>= 3.2.0', '< 4.3.0'" 4.0
 expect_version 'lower bound wins'   "'>= 3.4.0', '< 3.5.0'" 3.4
 
 # Without mise, rbenv is used when it has a Ruby the checkout accepts: the newest

@@ -7,12 +7,12 @@
 #   MISE_BIN        mise executable, used only when it is present
 #   RBENV_BIN       rbenv executable, used when mise is absent and rbenv is present
 #   CMA_RUBY        pin the Ruby version instead of deriving it from the Gemfile
-#   CMA_RUBY_MAX    newest Ruby that actually exists (default: 3.4)
+#   CMA_RUBY_MAX    newest Ruby that actually exists (default: 4.0)
 
 REDMINE_DIR="${REDMINE_DIR:-redmine}"
 MISE_BIN="${MISE_BIN:-mise}"
 RBENV_BIN="${RBENV_BIN:-rbenv}"
-CMA_RUBY_MAX="${CMA_RUBY_MAX:-3.4}"
+CMA_RUBY_MAX="${CMA_RUBY_MAX:-4.0}"
 
 PLUGIN_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # Used by the scripts that source this file, not here.
@@ -34,9 +34,10 @@ cma_ruby_lower_bound() {
 }
 
 # Redmine pins a range rather than a version, so derive one just below the upper
-# bound: "< 3.5.0" means 3.4 is the newest Ruby the checkout accepts. Redmine 7
-# allows "< 4.1.0", which would derive a Ruby 4.0 that does not exist yet, so the
-# result is clamped to CMA_RUBY_MAX and floored at the lower bound.
+# bound: "< 3.5.0" means 3.4 is the newest Ruby the checkout accepts, and Redmine
+# 7.0's "< 4.1.0" means 4.0. A bound past the newest release would derive a Ruby
+# that does not exist yet, so the result is clamped to CMA_RUBY_MAX and floored
+# at the lower bound.
 cma_detect_ruby_version() {
   local gemfile="$REDMINE_DIR/Gemfile" line lower upper major minor candidate
 
