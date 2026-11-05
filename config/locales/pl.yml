@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(różne wartości)"
   label_cma_position_bottom: "Na dole"
   label_cma_position_top: "Na górze"
+  permission_export_issues_json: "Eksport zagadnień (JSON)"
+  text_cma_export_limit_exceeded: "Wybrano %{count} zagadnień, więcej niż limit eksportu %{max}. Nic nie zostało wyeksportowane."
   text_cma_request_unknown: "Żądanie nie zostało ukończone, niektóre zmiany mogą być już zapisane. Ponowne wysłanie jest bezpieczne: nic nie zostanie zastosowane dwa razy."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} również dodaje Daty do menu kontekstowego, które pojawiłyby się dwa razy. Wyłącz to w ustawieniach tej wtyczki lub zaktualizuj ją do wersji %{fixed} lub nowszej."

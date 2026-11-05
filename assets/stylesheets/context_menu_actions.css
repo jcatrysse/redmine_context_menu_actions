@@ -57,3 +57,8 @@ tr.cma-updated > td { animation: cma-updated 2s ease-out; }
 @media (prefers-reduced-motion: reduce) {
   tr.cma-updated > td { animation: none; }
 }
+
+/* Export (JSON) downloads and the page stays. Core's context menu keeps the
+   selection only when the click lands on the link itself, not on the icon or
+   label inside it (6.0 and later), so the link takes the click. */
+#context-menu a.cma-export-link > * { pointer-events: none; }

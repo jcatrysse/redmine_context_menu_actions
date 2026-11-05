@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(値が異なります)"
   label_cma_position_bottom: "末尾"
   label_cma_position_top: "先頭"
+  permission_export_issues_json: "チケットのエクスポート (JSON)"
+  text_cma_export_limit_exceeded: "%{count}件のチケットが選択されていて、エクスポートの上限(%{max}件)を超えています。何もエクスポートされませんでした。"
   text_cma_request_unknown: "リクエストが完了しませんでした。一部の変更はすでに保存されている可能性があります。再送信しても安全です。同じ変更が二重に適用されることはありません。"
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} もコンテキストメニューに日付を追加するため、二重に表示されます。そのプラグインの設定で無効にするか、%{fixed} 以降に更新してください。"

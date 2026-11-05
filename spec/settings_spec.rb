@@ -15,6 +15,8 @@ RSpec.describe 'plugin settings' do
     body = settings_page
 
     RedmineContextMenuActions::DEFAULT_SETTINGS.each_key do |key|
+      next if key == 'export_json_include' # a list, see below
+
       expect(body).to include(%(name="settings[#{key}]")), key
       expect(body).to include(%(<label for="settings_#{key}">)), key
       expect(body).to match(/<(input|select)[^>]*id="settings_#{key}"/), key
@@ -27,12 +29,15 @@ RSpec.describe 'plugin settings' do
     expect(body).to include(%(<label for="settings_enable_notes">#{I18n.t(:label_add_note)}</label>))
     expect(body).to include(%(<label for="settings_enable_last_notes_link">#{I18n.t(:label_last_notes)}: #{I18n.t(:label_add_note)}</label>))
     expect(body).to include(%(<label for="settings_enable_dates">#{I18n.t(:label_cma_dates)}</label>))
+    expect(body).to include(%(<label for="settings_enable_export_json">#{I18n.t(:button_export)} (JSON)</label>))
+    expect(body).to include(%(<label for="settings_export_json_limit">#{I18n.t(:setting_issues_export_limit)}</label>))
+    expect(body).to include(I18n.t(:label_export_options, :export_format => 'JSON'))
     expect(body).not_to include('translation missing')
   end
 
   it 'posts an explicit 0 for every unticked box' do
     body = settings_page
-    %w[enable_notes enable_last_notes_link enable_dates].each do |key|
+    %w[enable_notes enable_last_notes_link enable_dates enable_export_json].each do |key|
       expect(body).to include(%(<input type="hidden" name="settings[#{key}]" value="0" autocomplete="off" />)), key
     end
   end
@@ -45,6 +50,47 @@ RSpec.describe 'plugin settings' do
     expect(Setting.plugin_redmine_context_menu_actions['enable_notes']).to eq('0')
     expect(RedmineContextMenuActions.notes_enabled?).to be(false)
     expect(RedmineContextMenuActions.menu_position).to eq('bottom')
+  end
+
+  describe 'Export (JSON)' do
+    it 'is off, with a limit of 100 and every part of the API response ticked, by default' do
+      Setting.plugin_redmine_context_menu_actions = {}
+      body = settings_page
+
+      expect(body[/<input[^>]*id="settings_enable_export_json"[^>]*>/]).not_to include('checked')
+      expect(body[/<input[^>]*id="settings_export_json_limit"[^>]*>/]).to include('value="100"')
+      RedmineContextMenuActions::EXPORT_PARTS.each do |part|
+        expect(body[/<input[^>]*id="settings_export_json_include_#{part}"[^>]*>/]).to include('checked'), part
+      end
+      expect(body).to include(%(<input type="hidden" name="settings[export_json_include][]" value="" autocomplete="off" />))
+    end
+
+    it 'labels each part with core words' do
+      body = settings_page
+      {'journals' => :label_history, 'attachments' => :label_attachment_plural, 'relations' => :label_related_issues,
+       'children' => :label_subtask_plural, 'watchers' => :label_issue_watchers,
+       'changesets' => :label_associated_revisions}.each do |part, key|
+        expect(body).to match(%r{<label class="block">\s*<input[^>]*id="settings_export_json_include_#{part}"[^>]*>\s*#{Regexp.escape(I18n.t(key))}\s*</label>}), part
+      end
+    end
+
+    it 'stores the parts ticked, and none when none is ticked' do
+      post = lambda do |parts|
+        session.post '/settings/plugin/redmine_context_menu_actions',
+                     :params => {:settings => {'enable_export_json' => '1', 'export_json_limit' => '50',
+                                               'export_json_include' => [''] + parts}}
+        Setting.clear_cache
+      end
+
+      post.call(%w[watchers journals])
+      expect(RedmineContextMenuActions.export_json_enabled?).to be(true)
+      expect(RedmineContextMenuActions.export_json_limit).to eq(50)
+      expect(RedmineContextMenuActions.export_json_include).to eq(%w[journals watchers])
+
+      post.call([])
+      expect(RedmineContextMenuActions.export_json_include).to eq([])
+      expect(settings_page[/<input[^>]*id="settings_export_json_include_journals"[^>]*>/]).not_to include('checked')
+    end
   end
 
   it 'renders a setting stored as 0 as unticked' do

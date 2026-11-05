@@ -151,6 +151,9 @@ test('dates dialog, one issue, mixed values and an error', { skip }, async () =>
 
 test('settings page', { skip }, async () => {
   const { page } = env;
+  // Taller than the other shots: the export settings follow the others.
+  await page.setViewportSize({ width: 1100, height: 1100 });
   await page.goto(h.BASE + '/settings/plugin/redmine_context_menu_actions');
   await shot('12-settings', '#settings', 20);
+  await page.setViewportSize({ width: 1100, height: 720 });
 });

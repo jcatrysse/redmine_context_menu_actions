@@ -1,4 +1,4 @@
-<%# Add a note, then Dates: together, at the top of the menu (above Edit) or at its end, as the settings say. %>
+<%# Add a note, Dates, then Export (JSON): together, at the top of the menu (above Edit) or at its end, as the settings say. %>
 <% if RedmineContextMenuActions.notes_enabled? && RedmineContextMenuActions::Predicates.notes_addable?(issues) %>
   <%= render :partial => 'context_menu_actions/notes_menu_item', :locals => {:issues => issues} %>
 <% end %>
@@ -11,4 +11,7 @@
   <% if RedmineContextMenuActions::Predicates.date_fields(safe_attributes).any? %>
     <%= render :partial => 'context_menu_actions/dates_menu_item', :locals => {:issues => issues} %>
   <% end %>
+<% end %>
+<% if RedmineContextMenuActions.export_json_enabled? && RedmineContextMenuActions::Predicates.export_allowed?(issues) %>
+  <%= render :partial => 'context_menu_actions/export_menu_item', :locals => {:issues => issues, :back => back} %>
 <% end %>

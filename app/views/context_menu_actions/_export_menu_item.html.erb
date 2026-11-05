@@ -1,0 +1,4 @@
+<%# A plain link: the browser downloads the file and the page stays. Over the limit the request is refused with a message, never cut short. %>
+<li><%= context_menu_link RedmineContextMenuActions::Icons.label(self, 'download', "#{l(:button_export)} (JSON)"),
+                          context_menu_actions_export_path(:ids => issues.map(&:id), :back_url => back),
+                          :class => 'icon icon-download cma-export-link' %></li>

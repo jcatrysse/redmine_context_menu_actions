@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(مقادیر متفاوت)"
   label_cma_position_bottom: "پایین"
   label_cma_position_top: "بالا"
+  permission_export_issues_json: "صدور مسئله‌ها (JSON)"
+  text_cma_export_limit_exceeded: "%{count} مسئله انتخاب شده است، بیشتر از سقف صدور %{max}. چیزی صادر نشد."
   text_cma_request_unknown: "درخواست کامل نشد و ممکن است برخی تغییرات از قبل ذخیره شده باشند. ارسال دوباره بی‌خطر است: هیچ چیز دو بار اعمال نمی‌شود."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} هم تاریخ‌ها را به منوی زمینه اضافه می‌کند و این گزینه دو بار نشان داده می‌شود. آن را در تنظیمات آن افزونه خاموش کنید یا افزونه را به %{fixed} یا جدیدتر به‌روز کنید."

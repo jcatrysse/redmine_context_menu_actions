@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(mixed values)"
   label_cma_position_bottom: "Bottom"
   label_cma_position_top: "Top"
+  permission_export_issues_json: "Export issues (JSON)"
+  text_cma_export_limit_exceeded: "%{count} issues selected, more than the export limit of %{max}. Nothing was exported."
   text_cma_request_unknown: "The request did not complete, some changes may already be saved. Submitting again is safe: nothing is applied twice."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} also adds Dates to the context menu, so it would show twice. Switch it off in that plugin's settings, or upgrade it to %{fixed} or later."

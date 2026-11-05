@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(valores distintos)"
   label_cma_position_bottom: "Abaixo"
   label_cma_position_top: "Arriba"
+  permission_export_issues_json: "Exportar as peticións (JSON)"
+  text_cma_export_limit_exceeded: "Seleccionáronse %{count} peticións, máis que o límite de exportación de %{max}. Non se exportou nada."
   text_cma_request_unknown: "A solicitude non se completou, algúns cambios poden estar xa gardados. Pode enviar de novo sen risco: nada se aplica dúas veces."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} tamén engade Datas ao menú contextual, que aparecería dúas veces. Desactívao na configuración dese complemento ou actualízao á %{fixed} ou posterior."

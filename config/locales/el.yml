@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(διαφορετικές τιμές)"
   label_cma_position_bottom: "Κάτω"
   label_cma_position_top: "Πάνω"
+  permission_export_issues_json: "Εξαγωγή θεμάτων (JSON)"
+  text_cma_export_limit_exceeded: "Επιλέχθηκαν %{count} θέματα, περισσότερα από το όριο εξαγωγής των %{max}. Δεν εξήχθη τίποτα."
   text_cma_request_unknown: "Το αίτημα δεν ολοκληρώθηκε, ορισμένες αλλαγές ίσως έχουν ήδη αποθηκευτεί. Η εκ νέου υποβολή είναι ασφαλής: τίποτα δεν εφαρμόζεται δύο φορές."
   text_cma_todo_lists_dates_conflict: "Το Issue To-do Lists %{version} προσθέτει επίσης Ημερομηνίες στο μενού περιβάλλοντος, οπότε θα εμφανίζονταν δύο φορές. Απενεργοποιήστε το στις ρυθμίσεις εκείνου του πρόσθετου ή αναβαθμίστε το στην %{fixed} ή νεότερη."

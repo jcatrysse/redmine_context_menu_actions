@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-# Quick actions in the issue context menu. The plugin has no permissions and no
-# project module of its own: every action is allowed exactly when Redmine itself
-# would allow the same change on the issue page.
+# Quick actions in the issue context menu. Add a note and Dates are allowed
+# exactly when Redmine itself would allow the same change on the issue page. The
+# JSON export has a permission of its own, export_issues_json, in the issue
+# tracking module, and is off until an administrator switches it on.
 module RedmineContextMenuActions
   PLUGIN_ID = :redmine_context_menu_actions
 
@@ -10,8 +11,21 @@ module RedmineContextMenuActions
     'enable_notes' => true,
     'menu_position' => 'top',
     'enable_last_notes_link' => true,
-    'enable_dates' => true
+    'enable_dates' => true,
+    'enable_export_json' => false,
+    'export_json_limit' => '100',
+    'export_json_include' => %w[journals attachments relations children watchers changesets]
   }.freeze
+
+  # The include values of GET /issues/:id.json the export may ask for, in core's
+  # spelling. allowed_statuses is left out: it describes what the exporting user
+  # may do next, not the issue.
+  EXPORT_PARTS = %w[journals attachments relations children watchers changesets].freeze
+
+  # The export is a GET with ids[] in the URL, like core's bulk links. Ten to
+  # eighteen bytes per id, plus the back_url: 200 ids stay well under the 8 KB
+  # request line most proxies and servers accept.
+  EXPORT_LIMIT_MAX = 200
 
   MENU_POSITIONS = %w[top bottom].freeze
 
@@ -57,8 +71,28 @@ module RedmineContextMenuActions
     MENU_POSITIONS.include?(position) ? position : DEFAULT_SETTINGS['menu_position']
   end
 
+  def self.export_json_enabled?
+    enabled?('enable_export_json')
+  end
+
+  # The most issues one export may hold, 1 to EXPORT_LIMIT_MAX; the default when
+  # the stored value is not a number.
+  def self.export_json_limit
+    value = setting('export_json_limit').to_s.strip
+    limit = value.match?(/\A\d+\z/) ? value.to_i : DEFAULT_SETTINGS['export_json_limit'].to_i
+    limit.clamp(1, EXPORT_LIMIT_MAX)
+  end
+
+  # The parts of the API response the export includes, in core's order. A
+  # stored list keeps only the known parts; an absent key means all of them.
+  def self.export_json_include
+    value = setting('export_json_include')
+    value = value.values if value.is_a?(Hash)
+    EXPORT_PARTS & Array(value).map(&:to_s)
+  end
+
   def self.any_enabled?
-    notes_enabled? || dates_enabled?
+    notes_enabled? || dates_enabled? || export_json_enabled?
   end
 
   # The c[] column names an issue list posts with its context menu request, kept

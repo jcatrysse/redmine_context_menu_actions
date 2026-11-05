@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(erinevad väärtused)"
   label_cma_position_bottom: "All"
   label_cma_position_top: "Üleval"
+  permission_export_issues_json: "Teemasid eksportida (JSON)"
+  text_cma_export_limit_exceeded: "Valitud on %{count} teemat, rohkem kui ekspordi piirang %{max}. Midagi ei eksporditud."
   text_cma_request_unknown: "Päring ei lõppenud, mõned muudatused võivad juba salvestatud olla. Uuesti saatmine on ohutu: midagi ei rakendata kaks korda."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} lisab kontekstimenüüsse samuti Kuupäevad, mis kuvataks siis kaks korda. Lülitage see selle plugina seadetes välja või uuendage see versioonile %{fixed} või uuemale."

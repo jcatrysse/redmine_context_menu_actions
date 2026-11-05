@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(različite vrijednosti)"
   label_cma_position_bottom: "Dolje"
   label_cma_position_top: "Gore"
+  permission_export_issues_json: "Eksport tiketa (JSON)"
+  text_cma_export_limit_exceeded: "Odabrano je %{count} tiketa, više od ograničenja za eksport od %{max}. Ništa nije eksportovano."
   text_cma_request_unknown: "Zahtjev nije završen, neke promjene su možda već sačuvane. Ponovno slanje je sigurno: ništa se ne primjenjuje dvaput."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} također dodaje Datume u kontekstni meni, pa bi se pojavili dvaput. Isključite to u postavkama tog dodatka ili ga nadogradite na %{fixed} ili noviju."

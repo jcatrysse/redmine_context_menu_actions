@@ -38,6 +38,14 @@ pref.update_block_settings('issuesassignedtome', 'columns' => %w[subject status 
 pref.update_block_settings('issuesreportedbyme', 'columns' => %w[subject status], 'sort' => [%w[id desc]])
 pref.save!
 
+# Export (JSON): switched on, granted to the Manager role (jsmith on eCookbook)
+# and not to Developer (dlopper). The REST API is on, so the export spec can
+# compare the file with GET /issues/:id.json.
+Setting.plugin_redmine_context_menu_actions =
+  Setting.plugin_redmine_context_menu_actions.to_h.merge('enable_export_json' => '1')
+Role.find(1).add_permission!(:export_issues_json)
+Setting.rest_api_enabled = '1'
+
 # Watchers do not matter here; mail goes nowhere in the test environment.
 Setting.per_page_options = '25,50,100'
 raise 'seed: My page issue not assigned' unless Issue.where(:assigned_to_id => author.id, :id => mine.id).exists?

@@ -33,3 +33,35 @@
                                     RedmineContextMenuActions.menu_position),
                  :id => 'settings_menu_position' %>
 </p>
+
+<%# Export (JSON): off by default. Roles need export_issues_json as well. %>
+<p>
+  <label for="settings_enable_export_json"><%= "#{l(:button_export)} (JSON)" %></label>
+  <%= hidden_field_tag 'settings[enable_export_json]', '0', :id => nil %>
+  <%= check_box_tag 'settings[enable_export_json]', '1', RedmineContextMenuActions.export_json_enabled?,
+                    :id => 'settings_enable_export_json' %>
+</p>
+
+<p>
+  <label for="settings_export_json_limit"><%= l(:setting_issues_export_limit) %></label>
+  <%= number_field_tag 'settings[export_json_limit]', RedmineContextMenuActions.export_json_limit,
+                       :min => 1, :max => RedmineContextMenuActions::EXPORT_LIMIT_MAX, :size => 6,
+                       :id => 'settings_export_json_limit' %>
+  <em class="info"><%= "1 - #{RedmineContextMenuActions::EXPORT_LIMIT_MAX}" %></em>
+</p>
+
+<%# The include values of GET /issues/:id.json, under core's own names for them. The empty value stores "none ticked" as such. %>
+<p>
+  <label><%= l(:label_export_options, :export_format => 'JSON') %></label>
+  <%= hidden_field_tag 'settings[export_json_include][]', '', :id => nil %>
+  <% included = RedmineContextMenuActions.export_json_include %>
+  <% {'journals' => :label_history, 'attachments' => :label_attachment_plural, 'relations' => :label_related_issues,
+      'children' => :label_subtask_plural, 'watchers' => :label_issue_watchers,
+      'changesets' => :label_associated_revisions}.each do |part, label| %>
+    <label class="block">
+      <%= check_box_tag 'settings[export_json_include][]', part, included.include?(part),
+                        :id => "settings_export_json_include_#{part}" %>
+      <%= l(label) %>
+    </label>
+  <% end %>
+</p>

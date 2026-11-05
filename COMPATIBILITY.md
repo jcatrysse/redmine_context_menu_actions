@@ -1,7 +1,8 @@
 # What this plugin assumes about Redmine
 
 A plugin that lives in the issue context menu and in core's modal leans on core
-markup, core JavaScript and core model rules. This file lists every place where
+markup, core JavaScript and core model rules, and its JSON export on core's API
+view. This file lists every place where
 it does, what the assumption is and what breaks if Redmine changes it.
 `spec/core_contract_spec.rb` asserts each one, so an upgrade that moves any of
 them fails a named example instead of breaking a menu or a dialog.
@@ -68,13 +69,31 @@ are still in the view, and the plugin does not touch the controller.
 | `Issue.load_visible_last_notes(issues, user)` | the last note per issue, private notes by `Journal.visible_notes_condition` (author always sees their own) | the updated Last notes block would show the wrong note |
 | `Journal` | sends its notification and `@` mentions after commit | notifications would differ from core |
 
+## Export (JSON)
+
+The export renders core's API view for each issue, as the user, and asks the
+questions `GET /issues/:id.json` asks first. It copies the following from core;
+each has an example in `spec/core_contract_spec.rb`, and `spec/export_json_spec.rb`
+compares the file with the real API response byte for byte.
+
+| What | Assumed | Breaks if |
+|---|---|---|
+| `IssuesController#show` | sets `@journals` (`visible_journals_with_index`, reversed for `wants_comments_in_reverse_order?`), `@relations` (other issue visible), spent hours (`Issue.load_visible_spent_hours` and `load_visible_total_spent_hours` with `view_time_entries`), `@changesets` (visible, reversed likewise); it is core's own method, not one a plugin put in its place | an entry differs from the API: the export would need the new instance variable or rule |
+| `issues/show.api.rsb` | reads no instance variable besides `@issue`, `@project`, `@journals`, `@relations`, `@changesets`, `@allowed_statuses` (the last only with `include=allowed_statuses`, which the export never asks for) | the view raises or renders a part from a stale value |
+| `Redmine::Views::ApiTemplateHandler` | picks the builder from `params[:format]`; `include_in_api_response?` reads `params[:include]`, comma separated | the export sets both while it renders, and removes them afterwards |
+| `Redmine::Views::Builders::Json` | renders `{"issue":{...}}`, and wraps it in a JSONP callback named by the request's `callback` or `jsonp` when JSONP is on | the export keeps the inner object as is; it strips `callback` and `jsonp` from its request, so the file is never wrapped |
+| `ApplicationController#find_issue` and `IssuesController` `authorize` | 404 for a missing issue, 403 (`Unauthorized`) for one that is not visible, then `allowed_to?` for issues#show | `skipped` would give other reasons than the API |
+| before_actions on `IssuesController#show` | besides those of `ApplicationController` (which run on the export too) only `find_issue`, `authorize` and redmine_view_issue_description's `vid_authorize_issue_detail`, which the export mirrors with `Issue#detail_access_granted?` | another plugin that refuses issues in the API would not refuse them in the export; the contract spec fails and names the filter |
+| `ApplicationController#render_to_body` | redmine_issue_field_visibility hides the issue fields of a user's roles while an API response renders (`api_request?`) | the export renders while `params[:format]` is `json`, so the same rule applies |
+| `Redmine::AccessControl` | a plugin may add a permission to the `issue_tracking` module; `:read => true` keeps it on a closed project | the permission would be missing or refused on closed projects |
+
 ## Routes and translations
 
 | What | Assumed |
 |---|---|
 | `preview_issue_path(project_id:, issue_id:)`, `preview_text_path` | preview for one issue, and for several |
 | `watchers_autocomplete_for_mention_path` | `@` suggestions, authorized by `add_issue_watchers` |
-| core locale keys | `label_add_note`, `label_issue_note_added`, `label_last_notes`, `label_x_issues`, `field_notes`, `field_private_notes`, `field_start_date`, `field_due_date`, `button_submit`, `button_cancel`, `button_clear`, `notice_successful_update`, `notice_failed_to_save_issues`, `notice_not_authorized`, `notice_file_not_found`, `notice_issue_update_conflict`, `error_invalid_authenticity_token`, `error_session_expired`, `text_warn_on_leaving_unsaved` exist in every core locale |
+| core locale keys | `label_add_note`, `label_issue_note_added`, `label_last_notes`, `label_x_issues`, `field_notes`, `field_private_notes`, `field_start_date`, `field_due_date`, `button_submit`, `button_cancel`, `button_clear`, `notice_successful_update`, `notice_failed_to_save_issues`, `notice_not_authorized`, `notice_file_not_found`, `notice_issue_update_conflict`, `error_invalid_authenticity_token`, `error_session_expired`, `text_warn_on_leaving_unsaved`, `button_export`, `setting_issues_export_limit`, `label_export_options`, `label_history`, `label_attachment_plural`, `label_related_issues`, `label_subtask_plural`, `label_issue_watchers`, `label_associated_revisions` exist in every core locale |
 
 ## Database engines
 

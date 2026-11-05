@@ -362,6 +362,95 @@ RSpec.describe 'what the plugin assumes about Redmine' do
     end
   end
 
+  # The JSON export renders core's API view with the instance variables
+  # IssuesController#show sets, and asks the questions GET /issues/:id.json
+  # asks before it. Each example names one thing it copies from core.
+  describe 'GET /issues/:id.json, which the JSON export reproduces' do
+    let(:controller) { core_source('app/controllers/issues_controller.rb') }
+    let(:show) { controller[/^  def show\n.*?^  end\n/m] }
+    let(:view) { core_source('app/views/issues/show.api.rsb') }
+
+    it 'sets the journals, relations, spent hours and changesets the way the export does' do
+      expect(show).to include('@journals = @issue.visible_journals_with_index')
+      expect(show).to include('@journals.reverse! if User.current.wants_comments_in_reverse_order?')
+      expect(show).to match(/@relations =\s*@issue\.relations\.\s*select\s*(do|\{)\s*\|r\|\s*r\.other_issue\(@issue\)(&\.| && r\.other_issue\(@issue\)\.)visible\?/m)
+      expect(show).to match(/if\s+User\.current\.allowed_to\?\(:view_time_entries,\s*@project\)\s*
+                             Issue\.load_visible_spent_hours\(\[@issue\]\)\s*
+                             Issue\.load_visible_total_spent_hours\(\[@issue\]\)/x)
+      expect(show).to include('@changesets = @issue.changesets.visible.preload(:repository, :user).to_a')
+      expect(show).to include("if include_in_api_response?('changesets')")
+    end
+
+    it 'has an API view that reads no instance variable the export does not set' do
+      expect(view.scan(/@\w+/).uniq - %w[@issue @project @journals @relations @changesets @allowed_statuses]).to eq([])
+      expect(view).to include("end if include_in_api_response?('allowed_statuses')")
+    end
+
+    it 'picks the builder from params[:format] and the parts from params[:include]' do
+      expect(core_source('lib/redmine/views/api_template_handler.rb'))
+        .to include('Redmine::Views::Builders.for(params[:format], request, response)')
+      helper = core_source('app/helpers/application_helper.rb')
+      expect(helper[/def include_in_api_response\?.*?\n  end\n/m]).to include("param.to_s.split(',')")
+    end
+
+    # The export strips callback and jsonp from the request, so the file is
+    # never wrapped in a JSONP call.
+    it 'wraps JSON in a callback named by the request parameters callback or jsonp' do
+      expect(core_source('lib/redmine/views/builders/json.rb'))
+        .to include('callback = request.params[:callback] || request.params[:jsonp]')
+    end
+
+    it 'renders an issue as {"issue":{...}}, the object the export keeps' do
+      User.current = User.find(1)
+      builder = Redmine::Views::Builders::Json.new(ActionDispatch::TestRequest.create, ActionDispatch::TestResponse.new)
+      builder.issue { builder.id 1 }
+      expect(builder.output).to eq('{"issue":{"id":1}}')
+    end
+
+    it 'answers 404 for a missing issue and 403 for one the user cannot see (find_issue)' do
+      source = core_source('app/controllers/application_controller.rb')
+      expect(source[/def find_issue\n.*?\n  end\n/m]).to include('raise Unauthorized unless @issue.visible?')
+      expect(source[/def find_issue\n.*?\n  end\n/m]).to include('render_404')
+      expect(controller).to include('before_action :find_issue, :only => [:show, :edit, :update')
+      expect(controller).to include('before_action :authorize, :except => [:index, :new, :create]')
+    end
+
+    it 'is IssuesController#show itself, not a version another plugin put in its place' do
+      expect(IssuesController.instance_method(:show).source_location.first)
+        .to eq(Rails.root.join('app/controllers/issues_controller.rb').to_s)
+    end
+
+    # Every before_action of IssuesController that runs on show, beyond those of
+    # ApplicationController (which run on the export too), is one the export
+    # mirrors. A plugin that adds another can refuse an issue in the API; the
+    # export would not know, so this fails and names it.
+    it 'runs no before_action on show that the export does not mirror' do
+      mirrored = {
+        :find_issue => 'Issue#visible?, missing ids',
+        :authorize => 'allowed_to?(issues#show)',
+        :vid_authorize_issue_detail => 'Issue#detail_access_granted? (redmine_view_issue_description)'
+      }
+      probe = IssuesController.new
+      probe.action_name = 'show'
+      applies = lambda do |condition|
+        case condition
+        when Proc then condition.arity == 1 ? condition.call(probe) : probe.instance_exec(&condition)
+        when Symbol, String then true
+        else condition.respond_to?(:match?) ? condition.match?(probe) : true
+        end
+      end
+      inherited = ApplicationController._process_action_callbacks.map(&:filter)
+      on_show = IssuesController._process_action_callbacks.select do |callback|
+        callback.kind == :before &&
+          Array(callback.instance_variable_get(:@if)).all?(&applies) &&
+          Array(callback.instance_variable_get(:@unless)).none? { |c| !c.is_a?(Symbol) && applies.call(c) }
+      end.map(&:filter)
+
+      expect(on_show).to include(:find_issue, :authorize)
+      expect(on_show - inherited - mirrored.keys).to eq([])
+    end
+  end
+
   describe 'the routes' do
     # 7.0 moved the context menu to ContextMenus::IssuesController; the view and
     # its hooks stayed where they were.

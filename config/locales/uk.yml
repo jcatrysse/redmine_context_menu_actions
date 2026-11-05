@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(різні значення)"
   label_cma_position_bottom: "Унизу"
   label_cma_position_top: "Угорі"
+  permission_export_issues_json: "Експорт питань (JSON)"
+  text_cma_export_limit_exceeded: "Вибрано питань: %{count}, це більше за ліміт експорту %{max}. Нічого не експортовано."
   text_cma_request_unknown: "Запит не завершився, частина змін може бути вже збережена. Надіслати ще раз безпечно: нічого не застосовується двічі."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} теж додає Дати до контекстного меню, і пункт з'явиться двічі. Вимкніть його в налаштуваннях того плагіна або оновіть плагін до %{fixed} чи новішої."

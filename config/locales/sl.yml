@@ -4,5 +4,7 @@
   label_cma_mixed_values: "(različne vrednosti)"
   label_cma_position_bottom: "Spodaj"
   label_cma_position_top: "Zgoraj"
+  permission_export_issues_json: "Izvozi zahtevke (JSON)"
+  text_cma_export_limit_exceeded: "Izbranih je %{count} zahtevkov, več kot je omejitev izvoza %{max}. Nič ni bilo izvoženo."
   text_cma_request_unknown: "Zahteva se ni dokončala, nekatere spremembe so morda že shranjene. Ponovno pošiljanje je varno: nič se ne uporabi dvakrat."
   text_cma_todo_lists_dates_conflict: "Issue To-do Lists %{version} prav tako doda Datume v priročni meni, ki bi se tako pokazali dvakrat. Izklopite to v nastavitvah tega vtičnika ali ga posodobite na %{fixed} ali novejšo."
