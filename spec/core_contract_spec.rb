@@ -420,6 +420,38 @@ RSpec.describe 'what the plugin assumes about Redmine' do
         .to eq(Rails.root.join('app/controllers/issues_controller.rb').to_s)
     end
 
+    # The before_actions of a controller that run on its show action, leaving
+    # out every filter of the parent's chain first: those run on the export too
+    # (it inherits them), and their conditions may need a real request.
+    #
+    # Conditions are evaluated the way Rails does: a proc runs with instance_exec
+    # on the controller, which it also receives when it takes an argument; an
+    # action filter (only:, except:) is matched on the action name. A condition
+    # that cannot be decided on a bare controller, without a request, counts as
+    # "applies", so the guard fails closed and names the filter.
+    def cma_show_before_actions(controller_class, parent_class)
+      inherited = parent_class._process_action_callbacks.map(&:filter)
+      probe = controller_class.new
+      probe.action_name = 'show'
+      decide = lambda do |condition, unknown|
+        case condition
+        when Proc then condition.arity.zero? ? probe.instance_exec(&condition) : probe.instance_exec(probe, &condition)
+        when Symbol, String then unknown
+        else condition.respond_to?(:match?) ? condition.match?(probe) : unknown
+        end
+      rescue StandardError
+        unknown
+      end
+
+      controller_class._process_action_callbacks.select do |callback|
+        next false unless callback.kind == :before
+        next false if inherited.include?(callback.filter)
+
+        Array(callback.instance_variable_get(:@if)).all? { |c| decide.call(c, true) } &&
+          Array(callback.instance_variable_get(:@unless)).none? { |c| decide.call(c, false) }
+      end.map(&:filter)
+    end
+
     # Every before_action of IssuesController that runs on show, beyond those of
     # ApplicationController (which run on the export too), is one the export
     # mirrors. A plugin that adds another can refuse an issue in the API; the
@@ -430,24 +462,77 @@ RSpec.describe 'what the plugin assumes about Redmine' do
         :authorize => 'allowed_to?(issues#show)',
         :vid_authorize_issue_detail => 'Issue#detail_access_granted? (redmine_view_issue_description)'
       }
-      probe = IssuesController.new
-      probe.action_name = 'show'
-      applies = lambda do |condition|
-        case condition
-        when Proc then condition.arity == 1 ? condition.call(probe) : probe.instance_exec(&condition)
-        when Symbol, String then true
-        else condition.respond_to?(:match?) ? condition.match?(probe) : true
-        end
-      end
-      inherited = ApplicationController._process_action_callbacks.map(&:filter)
-      on_show = IssuesController._process_action_callbacks.select do |callback|
-        callback.kind == :before &&
-          Array(callback.instance_variable_get(:@if)).all?(&applies) &&
-          Array(callback.instance_variable_get(:@unless)).none? { |c| !c.is_a?(Symbol) && applies.call(c) }
-      end.map(&:filter)
+      on_show = cma_show_before_actions(IssuesController, ApplicationController)
 
       expect(on_show).to include(:find_issue, :authorize)
-      expect(on_show - inherited - mirrored.keys).to eq([])
+      expect(on_show - mirrored.keys).to eq([])
+    end
+
+    # The shape redmine_people has: a before_action on ApplicationController,
+    # prepended, whose arity-1 proc calls a private instance method. Called as
+    # condition.call(controller) the proc runs on the class and raises.
+    describe 'the guard itself' do
+      let(:base) do
+        stub_const('CmaGuardBaseController', Class.new(ApplicationController))
+        CmaGuardBaseController.class_eval do
+          # Real actions: from Rails 7.1 an only: or except: naming a missing
+          # action may raise when it is matched.
+          [:index, :show, :edit, :destroy, :bulk_edit].each { |action| define_method(action) { head :ok } }
+          prepend_before_action :cma_announcements, :except => [:destroy], :if => proc { |_c| html? }
+
+          private
+
+          def html?
+            request.format.html?
+          end
+        end
+        CmaGuardBaseController
+      end
+
+      def issues_like(base, &block)
+        stub_const('CmaGuardIssuesController', Class.new(base))
+        CmaGuardIssuesController.class_eval do
+          before_action :find_issue, :only => [:show, :edit]
+          before_action :find_issues, :only => [:bulk_edit]
+        end
+        CmaGuardIssuesController.class_eval(&block) if block
+        CmaGuardIssuesController
+      end
+
+      it 'leaves out the parent\'s filters before it looks at any condition' do
+        callback = base._process_action_callbacks.detect { |c| c.filter == :cma_announcements }
+        condition = callback.instance_variable_get(:@if).grep(Proc).first
+        probe = base.new
+        # What the guard used to do: the proc runs on the class, html? is not there.
+        expect { condition.call(probe) }.to raise_error(NoMethodError)
+
+        expect(cma_show_before_actions(issues_like(base), base)).to eq([:find_issue])
+      end
+
+      it 'names a filter of the controller itself whose condition cannot be decided without a request' do
+        controller = issues_like(base) do
+          before_action :cma_refuse, :only => [:show], :if => proc { |c| c.request.format.json? }
+          before_action :cma_other_action, :only => [:index]
+        end
+
+        expect(cma_show_before_actions(controller, base)).to eq([:find_issue, :cma_refuse])
+      end
+
+      it 'evaluates a proc on the controller, with and without an argument' do
+        controller = issues_like(base) do
+          before_action :cma_never, :if => proc { cma_false? }
+          before_action :cma_never_either, :if => proc { |c| c.send(:cma_false?) || cma_false? }
+          before_action :cma_always, :unless => proc { |_c| cma_false? }
+
+          private
+
+          def cma_false?
+            false
+          end
+        end
+
+        expect(cma_show_before_actions(controller, base)).to eq([:find_issue, :cma_always])
+      end
     end
   end
 
