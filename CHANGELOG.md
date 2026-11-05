@@ -11,7 +11,9 @@
   New permission **Export issues (JSON)** (`export_issues_json`, Issue tracking),
   granted to no role. New settings: Export (JSON) (off by default), Issues
   export limit (100, at most 200) and the parts to include (all by default).
-  Over the limit nothing is exported and the list says why.
+  Over the limit nothing is exported and the list says why. With the 5.1
+  version of redmine_issue_field_visibility, which hides fields on the issue
+  page only, an issue with a field hidden from the user is skipped.
 
 ### Changed
 * CI runs Redmine 7.0 (and trunk) on Ruby 4.0 instead of 3.4; the `.codex`
