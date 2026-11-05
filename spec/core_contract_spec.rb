@@ -462,10 +462,34 @@ RSpec.describe 'what the plugin assumes about Redmine' do
         :authorize => 'allowed_to?(issues#show)',
         :vid_authorize_issue_detail => 'Issue#detail_access_granted? (redmine_view_issue_description)'
       }
+      # Filters of other GEOxyz plugins that run on show but never refuse the
+      # request or change the API response, checked in the 44-plugin harness
+      # (5 November 2026). The export does not run them.
+      harmless = {
+        :load_issue_recurrences => 'issue_recurring: sets @recurrences and the next dates for the HTML view',
+        :set_env => 'redmine_custom_workflows: sets the remote IP for workflow scripts; a GET saves nothing',
+        :view_issue => 'redmine_zenedit: records an IssueViewing; the export records no viewing'
+      }
       on_show = cma_show_before_actions(IssuesController, ApplicationController)
 
       expect(on_show).to include(:find_issue, :authorize)
-      expect(on_show - mirrored.keys).to eq([])
+      expect(on_show - mirrored.keys - harmless.keys).to eq([])
+      (on_show & harmless.keys).each do |name|
+        expect(cma_method_source(IssuesController, name)).not_to match(CMA_RESPONDS), "#{name} now answers the request itself"
+      end
+    end
+
+    # A filter that answers the request (and so can refuse it) calls one of these.
+    CMA_RESPONDS = /\b(render\w*|redirect_to|redirect_back\w*|head|deny_access|require_login|send_data|send_file)\b/
+
+    # The source of a method, from its def to the end at the same indent; the
+    # def line alone for a one-line method.
+    def cma_method_source(klass, name)
+      file, line = klass.instance_method(name).source_location
+      lines = File.readlines(file)[(line - 1)..]
+      indent = lines.first[/\A\s*/]
+      last = lines.index { |l| l.match?(/\A#{indent}end\b/) }
+      lines.first.include?(' = ') || last.nil? ? lines.first : lines[0..last].join
     end
 
     # The shape redmine_people has: a before_action on ApplicationController,
@@ -516,6 +540,23 @@ RSpec.describe 'what the plugin assumes about Redmine' do
         end
 
         expect(cma_show_before_actions(controller, base)).to eq([:find_issue, :cma_refuse])
+      end
+
+      it 'reads the body of a filter method, to see that it answers no request' do
+        controller = issues_like(base) do
+          private
+
+          def cma_quiet
+            @cma_value = 1
+          end
+
+          def cma_loud
+            render_403 unless @cma_value
+          end
+        end
+
+        expect(cma_method_source(controller, :cma_quiet)).not_to match(CMA_RESPONDS)
+        expect(cma_method_source(controller, :cma_loud)).to match(CMA_RESPONDS)
       end
 
       it 'evaluates a proc on the controller, with and without an argument' do
