@@ -84,8 +84,21 @@ class ContextMenuActionsExportController < ApplicationController
     return false unless issue.visible?
     return false unless User.current.allowed_to?({:controller => 'issues', :action => 'show'}, issue.project)
     return false if issue.respond_to?(:detail_access_granted?) && !issue.detail_access_granted?(User.current)
+    return false if core_fields_hidden_in_ui_only?(issue)
 
     true
+  end
+
+  # redmine_issue_field_visibility without hide_values (its 5.1 version) hides
+  # core fields in the UI only; the API view still shows them. The REST API may
+  # be off, so the file must not show what the UI hides: an issue with a core
+  # field hidden from the user is refused. With hide_values the API view hides
+  # the fields itself, and the file is that view.
+  def core_fields_hidden_in_ui_only?(issue)
+    return false unless defined?(::RedmineIssueFieldVisibility)
+    return false if ::RedmineIssueFieldVisibility.respond_to?(:hide_values)
+
+    ::RedmineIssueFieldVisibility.hidden_core_fields(User.current, issue.project).present?
   end
 
   # The API view reads params[:format] (which builder) and params[:include]

@@ -131,6 +131,9 @@ Jan asked for a second opinion from another model. The production code (29 files
 - `export_issues_json` is a read permission, as `view_issues` is: an export changes nothing, so it works on a closed project, where the API still shows the issue.
 - The session only: no `accept_api_auth`, an API key does not log in to the export.
 - Strings: two keys of its own (the permission label, which Redmine looks up by name, and the limit message); the rest is core's (`button_export`, `setting_issues_export_limit`, `label_export_options` and the issue page's own names for the parts).
+- redmine_issue_field_visibility without `hide_values` (its 5.1 version) hides core fields in the UI only, its API view still shows them. Jan (5 November 2026): treat the REST API as off on 5.1, so fail closed: an issue with any core field hidden from the user is refused as `forbidden`; no JSON keys are filtered. With `hide_values` (7.0) nothing changes, the API view hides the fields.
+- redmine_view_issue_description main (5.1) refused issues in a prepended `IssuesController#show` only; the export saw no `Issue#detail_access_granted?` there and exported issues the API refuses. Jan chose to add `detail_access_granted?` to vid main (same body as its 7.0 branch) and leave the export's check as it is. Deploy both together on 5.1.
+- Other 5.1 plugins (production default branches, scanned by the coordinator): only vid restricts `IssuesController#show`. zenedit, issue_recurring and custom_workflows add harmless filters; agile, contacts, helpdesk, checklists, ai_triage and extended_api do not touch show access. Not checkable, not in the repositories: redmine_drive, redmine_questions, redmine_reporter and redmine_resources (RedmineUP).
 - Core's context menu keeps the selection only when a click lands on the link, not on the sprite and label inside it (6.0 and later). The download keeps the page, so the plugin CSS lets the export link take the click.
 
 ## Open, keuze voor Jan

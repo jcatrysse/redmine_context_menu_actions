@@ -70,6 +70,10 @@ RSpec.describe 'Export (JSON)' do
     [document, statuses]
   end
 
+  def ifv_hides_api_values?
+    Redmine::Plugin.installed?(:redmine_issue_field_visibility) && RedmineIssueFieldVisibility.respond_to?(:hide_values)
+  end
+
   def exporter(permissions, projects: [project], issues_visibility: 'all')
     user = cma_user
     projects.each { |p| cma_member(user, p, permissions | [:export_issues_json], issues_visibility: issues_visibility) }
@@ -273,10 +277,11 @@ RSpec.describe 'Export (JSON)' do
       end
     end
 
-    # redmine_issue_field_visibility hides core fields per role in API
-    # responses. The file hides them the same way.
+    # redmine_issue_field_visibility hides core fields per role. The version with
+    # hide_values (7.0) hides them in the API view too, and the file hides them
+    # the same way.
     it 'leaves out the core fields redmine_issue_field_visibility hides' do
-      skip 'redmine_issue_field_visibility is not installed' unless Redmine::Plugin.installed?(:redmine_issue_field_visibility)
+      skip 'redmine_issue_field_visibility with hide_values is not installed' unless ifv_hides_api_values?
       user = exporter([:view_issues])
       role = Member.find_by(:user_id => user.id, :project_id => project.id).roles.first
       Setting.plugin_redmine_issue_field_visibility = {
@@ -289,6 +294,84 @@ RSpec.describe 'Export (JSON)' do
       expect(entry['start_date']).to be_nil
       details = entry['journals'].flat_map { |j| j['details'] }.map { |d| d['name'] }
       expect(details).not_to include('due_date')
+    end
+
+    # The version without hide_values (5.1) hides core fields in the UI only; its
+    # API view still shows them. The REST API may be off, so the file must not
+    # show what the UI hides: an issue with a core field hidden from the user is
+    # refused as one the user may not open. Without the plugin, a stand-in with
+    # the same hidden_core_fields runs the same examples.
+    describe 'redmine_issue_field_visibility without hide_values' do
+      before do
+        skip 'redmine_issue_field_visibility has hide_values: the API view hides the fields' if ifv_hides_api_values?
+      end
+
+      # The plugin's own setting when it is installed; otherwise the stand-in
+      # reads the same structure from here.
+      def hide_fields(role, fields)
+        hidden = {'hiddenfields' => {role.id.to_s => fields.index_with { '1' }}}
+        if Redmine::Plugin.installed?(:redmine_issue_field_visibility)
+          Setting.plugin_redmine_issue_field_visibility = hidden
+        else
+          @ifv_settings = hidden
+        end
+      end
+
+      def with_ifv(&block)
+        return yield if Redmine::Plugin.installed?(:redmine_issue_field_visibility)
+
+        settings = @ifv_settings || {}
+        stand_in = Module.new
+        stand_in.define_singleton_method(:hidden_core_fields) do |user = User.current, project = nil|
+          next [] if user.admin?
+
+          lists = user.roles_for_project(project).map do |role|
+            (settings['hiddenfields'][role.id.to_s] || {}).select { |_, value| value.to_s == '1' }.keys
+          end
+          lists.inject { |a, b| a & b } || []
+        end
+        Object.const_set(:RedmineIssueFieldVisibility, stand_in)
+        begin
+          block.call
+        ensure
+          Object.send(:remove_const, :RedmineIssueFieldVisibility)
+        end
+      end
+
+      it 'refuses an issue with a core field hidden from the user' do
+        user = exporter([:view_issues])
+        hide_fields(Member.find_by(:user_id => user.id, :project_id => project.id).roles.first, %w[estimated_hours])
+
+        with_ifv do
+          document = JSON.parse(export(login(user), [rich_issue.id]).body)
+          expect(document['issues']).to eq([])
+          expect(document['skipped']).to eq([{'id' => rich_issue.id, 'reason' => 'forbidden'}])
+          expect(document.to_json).not_to include('Description of the rich issue')
+        end
+      end
+
+      it 'exports the issue as the API shows it to a role without hidden fields' do
+        user = exporter([:view_issues])
+        hide_fields(Role.find(1), %w[estimated_hours])
+
+        with_ifv do
+          _, statuses = expect_export_to_match_api(user, [rich_issue.id])
+          expect(statuses[rich_issue.id]).to eq(200)
+        end
+      end
+
+      it 'exports everything to an administrator' do
+        admin = User.find(1)
+        admin.password = PASSWORD
+        admin.password_confirmation = PASSWORD
+        admin.save!
+        hide_fields(Role.find(1), %w[estimated_hours])
+
+        with_ifv do
+          _, statuses = expect_export_to_match_api(admin, [rich_issue.id])
+          expect(statuses[rich_issue.id]).to eq(200)
+        end
+      end
     end
   end
 

@@ -130,7 +130,9 @@ selection.
   notes**, private issues, custom fields not visible to your roles and their
   history, watchers without **View watchers**, spent time without **View spent
   time**, and what other plugins take out of the API, such as the fields
-  redmine_issue_field_visibility hides.
+  redmine_issue_field_visibility hides. Its older version (Redmine 5.1) hides
+  fields on the issue page only, not in the API, so there an issue with a field
+  hidden from you is not exported but listed in `skipped` as `forbidden`.
 * Attachments are listed with their metadata (name, size, author, URL), as in the
   API; the files themselves are not in the export.
 * An issue the API would refuse you is not exported; it is listed in `skipped`
