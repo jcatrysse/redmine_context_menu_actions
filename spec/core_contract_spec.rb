@@ -415,9 +415,24 @@ RSpec.describe 'what the plugin assumes about Redmine' do
       expect(controller).to include('before_action :authorize, :except => [:index, :new, :create]')
     end
 
-    it 'is IssuesController#show itself, not a version another plugin put in its place' do
-      expect(IssuesController.instance_method(:show).source_location.first)
-        .to eq(Rails.root.join('app/controllers/issues_controller.rb').to_s)
+    # redmine_view_issue_description (its 5.1 version) puts a show in front of
+    # core's that refuses with vid_description_access?, the rule its
+    # Issue#detail_access_granted? holds on the model and the export asks. That
+    # one is known; any other show, or that one without detail_access_granted?,
+    # fails here.
+    it 'is IssuesController#show itself, or redmine_view_issue_description refusing in front of it' do
+      show = IssuesController.instance_method(:show)
+      if show.source_location.first.include?('/redmine_view_issue_description/')
+        expect(Issue.method_defined?(:detail_access_granted?)).to be(true)
+        expect(cma_source_at(*show.source_location))
+          .to match(/\A\s*def show\n\s*return render_403 unless vid_description_access\?\n\s*super\n\s*end\n\z/)
+        rule = cma_method_source(IssuesController, :vid_description_access?)
+        %w[admin? assigned_to watcher_access_granted? description_access_granted?].each do |path|
+          expect(rule).to include(path)
+        end
+        show = show.super_method
+      end
+      expect(show.source_location.first).to eq(Rails.root.join('app/controllers/issues_controller.rb').to_s)
     end
 
     # The before_actions of a controller that run on its show action, leaving
@@ -485,7 +500,10 @@ RSpec.describe 'what the plugin assumes about Redmine' do
     # The source of a method, from its def to the end at the same indent; the
     # def line alone for a one-line method.
     def cma_method_source(klass, name)
-      file, line = klass.instance_method(name).source_location
+      cma_source_at(*klass.instance_method(name).source_location)
+    end
+
+    def cma_source_at(file, line)
       lines = File.readlines(file)[(line - 1)..]
       indent = lines.first[/\A\s*/]
       last = lines.index { |l| l.match?(/\A#{indent}end\b/) }
